@@ -57,6 +57,12 @@ class Settings(BaseSettings):
     # Relative paths resolve against the backend/ directory. Empty = disabled.
     llm_dump_dir: str = "logs/llm"
 
+    # Which vision prompt version to use, see app/services/prompts.py.
+    # Kept configurable so prompt changes can be A/B tested against the
+    # eval harness (backend/eval/) and rolled back without touching code.
+    # Unknown values fall back to prompts.DEFAULT_PROMPT_VERSION.
+    prompt_version: str = "v2"
+
     # App
     debug: bool = True
 

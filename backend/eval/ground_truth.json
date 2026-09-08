@@ -1,0 +1,42 @@
+{
+  "dataset": "b0-b50 广东增值税专用发票 51 张",
+  "note": [
+    "同一批次、同一对交易主体的 51 张不同发票（发票代码相同、发票号码连号递增），",
+    "差异只在拍摄角度与旋转。因此除 invoice_number 外的字段在全数据集上是恒定的。",
+    "invoice_number 每张不同、尚未标注，暂不参与评分。",
+    "item_name 存在合法的写法差异（空格/分类前缀），暂不参与评分。"
+  ],
+  "verified_on": ["b3.jpg", "b0.jpg", "b12.jpg"],
+  "verified_note": "买卖方方向已在上述三张原图上人工核对：购买方=深圳市购机汇网络有限公司，销售方=广州晶东贸易有限公司（右下角发票专用章为销售方）。",
+
+  "scored_fields": [
+    "invoice_code",
+    "issue_date",
+    "buyer_name",
+    "buyer_tax_id",
+    "seller_name",
+    "seller_tax_id",
+    "amount",
+    "tax_amount",
+    "total_with_tax",
+    "tax_rate"
+  ],
+
+  "constant_fields": {
+    "invoice_code": "4400154130",
+    "issue_date": "2016-06-12",
+    "buyer_name": "深圳市购机汇网络有限公司",
+    "buyer_tax_id": "440300083885931",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "2987.18",
+    "tax_amount": "507.82",
+    "total_with_tax": "3495.00",
+    "tax_rate": "17%"
+  },
+
+  "per_file": {},
+
+  "exclude_files": ["b195.jpg"],
+  "exclude_reason": "b195.jpg 不属于 b0-b50 这批数据，来源不明，排除以免污染基线。"
+}

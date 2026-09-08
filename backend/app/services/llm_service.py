@@ -16,9 +16,8 @@ from app.config import get_settings
 # Thread lock for singleton initialization
 _llm_lock = threading.Lock()
 from app.services.prompts import (
-    INVOICE_VISION_PROMPT,
-    INVOICE_VISION_SYSTEM_PROMPT,
     REQUIRED_FIELDS,
+    get_vision_prompt,
 )
 
 logger = logging.getLogger(__name__)
@@ -138,6 +137,7 @@ def _dump_llm_exchange(
     changes: Optional[list[str]] = None,
     extra_keys: Optional[list[str]] = None,
     error: Optional[str] = None,
+    prompt_version: Optional[str] = None,
 ) -> Optional[Path]:
     """Write one file per LLM call showing the response before/after cleaning.
 
@@ -168,6 +168,7 @@ def _dump_llm_exchange(
             f"文件类型   : {ctx.file_type or '(unknown)'}",
             f"Provider   : {provider_name}",
             f"Model      : {model}",
+            f"Prompt     : {prompt_version or '(unknown)'}",
         ]
         if error:
             lines.append(f"结果       : FAILED - {error}")
@@ -715,16 +716,19 @@ class LLMService:
 
         label = ctx.label if ctx else "invoice=? file=?"
         content: Optional[str] = None
+        system_prompt, user_prompt, prompt_version = get_vision_prompt(
+            getattr(settings, "prompt_version", None)
+        )
         try:
             content = provider.vision_completion(
-                INVOICE_VISION_SYSTEM_PROMPT,
-                INVOICE_VISION_PROMPT,
+                system_prompt,
+                user_prompt,
                 image_data,
                 mime_type
             )
 
             return self._parse_json_response(
-                content, provider.get_provider_name(), ctx
+                content, provider.get_provider_name(), ctx, prompt_version
             )
 
         except json.JSONDecodeError as e:
@@ -737,6 +741,7 @@ class LLMService:
                 ctx,
                 content,
                 error=f"JSONDecodeError: {e}",
+                prompt_version=prompt_version,
             )
             return {}
         except Exception as e:
@@ -749,6 +754,7 @@ class LLMService:
                 ctx,
                 content,
                 error=f"{type(e).__name__}: {e}",
+                prompt_version=prompt_version,
             )
             return {}
 
@@ -804,6 +810,7 @@ class LLMService:
         content: str,
         provider_name: str,
         ctx: Optional["LLMCallContext"] = None,
+        prompt_version: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Parse JSON from LLM response with schema validation and data cleaning.
 
@@ -866,6 +873,7 @@ class LLMService:
             cleaned_fields=fields,
             changes=changes,
             extra_keys=extra_keys,
+            prompt_version=prompt_version,
         )
         if dump_path:
             logger.warning(f"LLM ({provider_name}) dump written: {dump_path}")
