@@ -16,11 +16,13 @@ from app.config import get_settings
 # Thread lock for singleton initialization
 _llm_lock = threading.Lock()
 from app.services.prompts import (
+    BUYER_ENTITIES,
     ENTITIES_VERSION,
     ENTITY_BY_ID,
     REQUIRED_FIELDS,
     get_vision_prompt,
 )
+from app.services.validation import POSTPROCESS_VERSION, validate
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -140,6 +142,7 @@ def _dump_llm_exchange(
     extra_keys: Optional[list[str]] = None,
     error: Optional[str] = None,
     prompt_version: Optional[str] = None,
+    validation: Any = None,
 ) -> Optional[Path]:
     """Write one file per LLM call showing the response before/after cleaning.
 
@@ -172,6 +175,7 @@ def _dump_llm_exchange(
             f"Model      : {model}",
             f"Prompt     : {prompt_version or '(unknown)'}",
             f"Entities   : {ENTITIES_VERSION}",
+            f"Postprocess: {POSTPROCESS_VERSION}",
         ]
         if error:
             lines.append(f"结果       : FAILED - {error}")
@@ -194,11 +198,11 @@ def _dump_llm_exchange(
             lines.append("")
 
         if cleaned_fields is not None:
-            lines += [_SUB, "[3] 值清洗后 — _normalize_field_value 的输出，交给 OCR/LLM 仲裁", _SUB]
+            lines += [_SUB, "[3] 后处理后 — 购买方按主体 id 填充 + 校验层置空，入库用", _SUB]
             lines.append(json.dumps(cleaned_fields, ensure_ascii=False, indent=2))
             lines.append("")
 
-            lines += [_SUB, "[4] 逐字段差异 — 仅列出被清洗器改动过的字段", _SUB]
+            lines += [_SUB, "[4] 逐字段差异 — 仅列出被后处理改动过的字段", _SUB]
             if changes:
                 lines += [f"  {c}" for c in changes]
             else:
@@ -207,6 +211,19 @@ def _dump_llm_exchange(
             lines.append(
                 f"被丢弃的多余键: {extra_keys}" if extra_keys else "被丢弃的多余键: (无)"
             )
+
+        if validation is not None:
+            lines.append("")
+            lines += [_SUB, "[5] 校验结果 — Postprocess 规则层", _SUB]
+            lines.append(f"  判定: {validation.verdict}")
+            if getattr(validation, "nulled", None):
+                lines.append(f"  已置空: {', '.join(validation.nulled)}")
+            for c in validation.checks:
+                mark = {"pass": "OK  ", "fail": "FAIL", "skipped": "SKIP"}.get(c.status, "?   ")
+                line = f"  [{mark}] {c.rule_id}"
+                if c.detail:
+                    line += f"  — {c.detail}"
+                lines.append(line)
 
         lines.append("")
         file_path.write_text("\n".join(lines), encoding="utf-8")
@@ -840,18 +857,18 @@ class LLMService:
 
         fields: Dict[str, Optional[str]] = {}
         changes: list[str] = []
+        # Postprocess v4：不再做逐字段清洗（去空格、去货币符号、正则不符就删）。
+        # 审计显示旧清洗器在 612 个值里只动过 9 个，全部是删除、零修复，
+        # 而且删掉的恰好是「只差一位」这类最有救援价值的错误。
+        # 现在原样保留模型输出，由 validation 层负责判断可信度。
         for field in REQUIRED_FIELDS:
-            raw_value = raw_fields.get(field)
-            cleaned = self._normalize_field_value(field, raw_value)
-            fields[field] = cleaned
-            if raw_value != cleaned:
-                changes.append(f"{field}: {raw_value!r} -> {cleaned!r}")
+            fields[field] = raw_fields.get(field)
 
         # v3 起：购买方不由模型自由识别，而是从报销主体清单里选一个 id，
         # 系统据此填充规范的名称与税号。这样购买方字段在结构上不可能出现
         # 字形错误、位数错误或串栏。
         # 注意分工：dump 的 [1] 原始响应里留的是模型给出的 id（供评测用），
-        # [3] 值清洗后里才是填充好的规范值（入库用）。
+        # [3] 后处理后里才是填充好的规范值（入库用）。
         entity_id = raw_fields.get("buyer_entity_id")
         if entity_id is not None:
             key = str(entity_id).strip().upper()
@@ -866,6 +883,13 @@ class LLMService:
             else:
                 changes.append(f"buyer: 主体 id {key!r} 不在清单中，购买方留空")
 
+        # 校验层。seller_is_entity 触发时把销售方置空并判为 rejected，
+        # 其余规则只报警、不改写任何值。
+        result = validate(fields, BUYER_ENTITIES)
+        fields = result.fields
+        for k in result.nulled:
+            changes.append(f"{k}: 因 seller_is_entity 命中而置空")
+
         populated = [k for k, v in fields.items() if v is not None]
         extra_keys = [k for k in raw_fields if k not in REQUIRED_FIELDS]
         # Emitted at WARNING on purpose: the app never configures the root logger,
@@ -873,17 +897,21 @@ class LLMService:
         # records are dropped by logging.lastResort before they reach stderr.
         label = ctx.label if ctx else "invoice=? file=?"
         summary = (
-            f"LLM ({provider_name}) normalize [{label}]: "
+            f"LLM ({provider_name}) postprocess [{label}]: "
             f"populated={len(populated)}/{len(REQUIRED_FIELDS)} "
-            f"changed={len(changes)}"
+            f"verdict={result.verdict}"
         )
+        if result.failed:
+            summary += f" failed_rules={result.failed}"
+        if result.skipped:
+            summary += f" skipped_rules={result.skipped}"
         if extra_keys:
             summary += f" dropped_extra_keys={extra_keys}"
         logger.warning(summary)
 
         if changes:
             logger.warning(
-                f"LLM ({provider_name}) normalize diff [{label}]: " + " | ".join(changes)
+                f"LLM ({provider_name}) postprocess diff [{label}]: " + " | ".join(changes)
             )
 
         dump_path = _dump_llm_exchange(
@@ -895,6 +923,7 @@ class LLMService:
             changes=changes,
             extra_keys=extra_keys,
             prompt_version=prompt_version,
+            validation=result,
         )
         if dump_path:
             logger.warning(f"LLM ({provider_name}) dump written: {dump_path}")
