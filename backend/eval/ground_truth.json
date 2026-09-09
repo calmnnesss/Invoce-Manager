@@ -22,9 +22,29 @@
     "tax_rate"
   ],
 
+  "scored_fields_closedset": [
+    "invoice_code",
+    "issue_date",
+    "buyer_entity_id",
+    "seller_name",
+    "seller_tax_id",
+    "amount",
+    "tax_amount",
+    "total_with_tax",
+    "tax_rate"
+  ],
+  "scored_fields_closedset_note": [
+    "v3 起购买方改为从报销主体清单中闭集选择，模型只返回 buyer_entity_id，",
+    "名称与税号由系统查表填充。因此购买方由原来的 2 个字段折成 1 个，",
+    "受评字段从 10 个变为 9 个。",
+    "注意：v3 的字段级准确率与 Exact Match 分母和 v1/v2 不同，不可直接同表比较；",
+    "可比的是销售方字段、数值字段，以及各自的整单全对率（口径差异需注明）。"
+  ],
+
   "constant_fields": {
     "invoice_code": "4400154130",
     "issue_date": "2016-06-12",
+    "buyer_entity_id": "E01",
     "buyer_name": "深圳市购机汇网络有限公司",
     "buyer_tax_id": "440300083885931",
     "seller_name": "广州晶东贸易有限公司",

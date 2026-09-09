@@ -61,7 +61,7 @@ class Settings(BaseSettings):
     # Kept configurable so prompt changes can be A/B tested against the
     # eval harness (backend/eval/) and rolled back without touching code.
     # Unknown values fall back to prompts.DEFAULT_PROMPT_VERSION.
-    prompt_version: str = "v2"
+    prompt_version: str = "v3.1"
 
     # App
     debug: bool = True

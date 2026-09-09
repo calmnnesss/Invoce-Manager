@@ -16,6 +16,8 @@ from app.config import get_settings
 # Thread lock for singleton initialization
 _llm_lock = threading.Lock()
 from app.services.prompts import (
+    ENTITIES_VERSION,
+    ENTITY_BY_ID,
     REQUIRED_FIELDS,
     get_vision_prompt,
 )
@@ -169,6 +171,7 @@ def _dump_llm_exchange(
             f"Provider   : {provider_name}",
             f"Model      : {model}",
             f"Prompt     : {prompt_version or '(unknown)'}",
+            f"Entities   : {ENTITIES_VERSION}",
         ]
         if error:
             lines.append(f"结果       : FAILED - {error}")
@@ -844,9 +847,27 @@ class LLMService:
             if raw_value != cleaned:
                 changes.append(f"{field}: {raw_value!r} -> {cleaned!r}")
 
+        # v3 起：购买方不由模型自由识别，而是从报销主体清单里选一个 id，
+        # 系统据此填充规范的名称与税号。这样购买方字段在结构上不可能出现
+        # 字形错误、位数错误或串栏。
+        # 注意分工：dump 的 [1] 原始响应里留的是模型给出的 id（供评测用），
+        # [3] 值清洗后里才是填充好的规范值（入库用）。
+        entity_id = raw_fields.get("buyer_entity_id")
+        if entity_id is not None:
+            key = str(entity_id).strip().upper()
+            entity = ENTITY_BY_ID.get(key)
+            if entity:
+                fields["buyer_name"] = entity["name"]
+                fields["buyer_tax_id"] = entity["tax_id"]
+                changes.append(
+                    f"buyer: 按主体 {key} 填充 -> "
+                    f"{entity['name']} / {entity['tax_id']}"
+                )
+            else:
+                changes.append(f"buyer: 主体 id {key!r} 不在清单中，购买方留空")
+
         populated = [k for k, v in fields.items() if v is not None]
         extra_keys = [k for k in raw_fields if k not in REQUIRED_FIELDS]
-
         # Emitted at WARNING on purpose: the app never configures the root logger,
         # and uvicorn's default logging config leaves it without a handler, so INFO
         # records are dropped by logging.lastResort before they reach stderr.

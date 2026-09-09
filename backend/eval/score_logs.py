@@ -108,6 +108,13 @@ def parse_log(path: Path):
     if pm and pm.group(1) != "(unknown)":
         prompt_version = pm.group(1).strip()
 
+    # 主体清单会被渲染进 prompt，改清单等于改 prompt 但版本号不变。
+    # 早期日志没有这一行。
+    entities_version = None
+    em = re.search(r"^Entities\s*:\s*(\S+)\s*$", text, re.M)
+    if em:
+        entities_version = em.group(1).strip()
+
     return {
         "log": path.name,
         "ts": g["ts"],
@@ -117,6 +124,7 @@ def parse_log(path: Path):
         "status": g["status"],
         "model": model,
         "prompt_version": prompt_version,
+        "entities_version": entities_version,
         "raw": extract_json_after(text, MARK_RAW) or {},
         "clean": extract_json_after(text, MARK_CLEAN) or {},
     }
@@ -197,9 +205,9 @@ def classify_party(field: str, value, gt) -> str:
 # --------------------------------------------------------------------------
 # 评分
 # --------------------------------------------------------------------------
-def score(samples, gt_cfg, image_meta):
+def score(samples, gt_cfg, image_meta, fields=None):
     gt = gt_cfg["constant_fields"]
-    fields = gt_cfg["scored_fields"]
+    fields = fields or gt_cfg["scored_fields"]
 
     per_sample = []
     for s in samples:
@@ -227,12 +235,23 @@ def score(samples, gt_cfg, image_meta):
             if f in PARTY_FIELDS:
                 rec["fields"][f]["kind"] = classify_party(f, raw.get(f), gt)
 
-        buyer_side = which_side(raw.get("buyer_name"), raw.get("buyer_tax_id"), gt)
+        # 闭集模式下模型不输出购买方名称/税号。v3/v3.1 还有
+        # buyer_observed_* 可用；v3.2 连它也去掉了，此时无法判断模型到底
+        # 读的是哪一栏，方向指标只能退化为“销售方那一栏对不对”。
+        obs_name = raw.get("buyer_observed_name", raw.get("buyer_name"))
+        obs_tax = raw.get("buyer_observed_tax_id", raw.get("buyer_tax_id"))
+        has_buyer_obs = obs_name is not None or obs_tax is not None
+        buyer_side = which_side(obs_name, obs_tax, gt) if has_buyer_obs else None
         seller_side = which_side(raw.get("seller_name"), raw.get("seller_tax_id"), gt)
         rec["buyer_side"] = buyer_side
         rec["seller_side"] = seller_side
-        rec["direction_ok"] = (buyer_side == "buyer" and seller_side == "seller")
-        rec["direction_swapped"] = (buyer_side == "seller" and seller_side == "buyer")
+        rec["has_buyer_obs"] = has_buyer_obs
+        if has_buyer_obs:
+            rec["direction_ok"] = (buyer_side == "buyer" and seller_side == "seller")
+            rec["direction_swapped"] = (buyer_side == "seller" and seller_side == "buyer")
+        else:
+            rec["direction_ok"] = (seller_side == "seller")
+            rec["direction_swapped"] = (seller_side == "buyer")
 
         rec["exact_match"] = all(rec["fields"][f]["raw_ok"] for f in fields)
 
@@ -255,8 +274,8 @@ def score(samples, gt_cfg, image_meta):
     return per_sample
 
 
-def summarize(per_sample, gt_cfg):
-    fields = gt_cfg["scored_fields"]
+def summarize(per_sample, gt_cfg, fields=None):
+    fields = fields or gt_cfg["scored_fields"]
     n = len(per_sample)
     out = {"n": n, "fields": {}}
 
@@ -275,6 +294,10 @@ def summarize(per_sample, gt_cfg):
     out["direction_ok"] = sum(1 for r in per_sample if r["direction_ok"])
     out["direction_acc"] = out["direction_ok"] / n if n else 0.0
     out["direction_swapped"] = sum(1 for r in per_sample if r["direction_swapped"])
+    out["direction_metric"] = (
+        "both_sides" if all(r.get("has_buyer_obs", True) for r in per_sample)
+        else "seller_only"
+    )
     out["exact_match"] = sum(1 for r in per_sample if r["exact_match"])
     out["exact_match_acc"] = out["exact_match"] / n if n else 0.0
     total_cells = n * len(fields)
@@ -286,7 +309,8 @@ def summarize(per_sample, gt_cfg):
     kinds = Counter()
     for r in per_sample:
         for f in PARTY_FIELDS:
-            kinds[r["fields"][f].get("kind", "?")] += 1
+            if f in r["fields"]:
+                kinds[r["fields"][f].get("kind", "?")] += 1
     out["party_error_kinds"] = dict(kinds)
 
     by_or = {}
@@ -318,29 +342,45 @@ def report(summary, per_sample, meta):
     L.append(f"筛选     : after={meta['after'] or '-'}  样本={summary['n']} 张（同名文件取最新一次）")
     L.append(f"模型     : {meta['provider']} / {meta['model']}")
     L.append(f"Prompt   : {'/'.join(meta.get('prompt_versions') or ['?'])}")
+    if meta.get("entities_versions"):
+        L.append(f"主体清单 : {'/'.join(meta['entities_versions'])}")
     L.append("口径     : 所有核心指标与 --compare 对比一律基于 raw（模型原始输出）；")
     L.append("           分字段表里的 clean 列只作清洗器诊断，不参与任何结论")
     L.append("")
+    n_fields = len(meta.get("scored_fields") or []) or 10
+    closed = meta.get("closed_set")
     L.append("—— 核心指标 ——")
+    if summary.get("direction_metric") == "seller_only":
+        L.append("  注：本次模型未输出购买方观测值，方向指标退化为只看销售方一侧，")
+        L.append("      口径比之前宽松，不可与 v1/v2/v3/v3.1 的方向正确率直接比较。")
+    if closed:
+        L.append("  注：闭集模式下购买方由 buyer_entity_id 独立决定，下面这项实际测的是")
+        L.append("      “销售方那一栏指向对不对”，不等同于买卖方是否颠倒。")
     L.append(f"  方向正确率 (买卖方未颠倒)   {summary['direction_ok']:>3}/{summary['n']}  = {pct(summary['direction_acc'])}")
     L.append(f"  其中明确颠倒的样本          {summary['direction_swapped']:>3}/{summary['n']}")
-    L.append(f"  Exact Match (10 字段全对)   {summary['exact_match']:>3}/{summary['n']}  = {pct(summary['exact_match_acc'])}")
+    L.append(f"  Exact Match ({n_fields} 字段全对)    {summary['exact_match']:>3}/{summary['n']}  = {pct(summary['exact_match_acc'])}")
     L.append(f"  字段级微平均准确率                     {pct(summary['field_acc_micro'])}")
     L.append("")
     L.append("—— 分字段准确率 ——")
     L.append(f"  {'字段':<18}{'raw':>8}{'clean':>9}{'清洗吞值':>10}{'清洗修复':>10}")
     for f, d in summary["fields"].items():
+        # buyer_entity_id 不在 REQUIRED_FIELDS 里，[3] 值清洗后根本不含它，
+        # clean 列永远是 0%，印出来只会误导。
+        if f == "buyer_entity_id":
+            L.append(f"  {f:<18}{pct(d['raw_acc']):>8}{'n/a':>9}{'-':>10}{'-':>10}")
+            continue
         L.append(
             f"  {f:<18}{pct(d['raw_acc']):>8}{pct(d['clean_acc']):>9}"
             f"{d['cleaner_dropped']:>10}{d['cleaner_fixed']:>10}"
         )
     L.append("")
-    L.append("—— 主体字段错误类型分布（4 字段 × 样本数）——")
+    n_party = sum(1 for f in PARTY_FIELDS if any(f in r["fields"] for r in per_sample))
+    L.append(f"—— 主体字段错误类型分布（{n_party} 字段 × {summary['n']} 样本 = {n_party * summary['n']} 个值）——")
     order = ["exact", "swapped", "swapped_near_miss", "near_miss", "unrelated", "missing"]
     label = {
         "exact": "完全正确",
-        "swapped": "与对方栏完全对调",
-        "swapped_near_miss": "对调且有字形错误",
+        "swapped": "等于对方栏的正确值" if closed else "与对方栏完全对调",
+        "swapped_near_miss": "接近对方栏的值，且有字形错" if closed else "对调且有字形错误",
         "near_miss": "本栏正确但字形有错",
         "unrelated": "与两栏都不沾边（幻觉/串栏）",
         "missing": "空值",
@@ -392,6 +432,8 @@ def main():
     ap.add_argument("--after", default=None, help="只统计时间戳 >= 该前缀的日志，如 20260908-1000")
     ap.add_argument("--prompt-version", default=None,
                     help="只统计使用该 prompt 版本的日志，如 v2。比 --after 更可靠")
+    ap.add_argument("--entities", default=None,
+                    help="只统计使用该主体清单指纹的日志（支持前缀匹配）")
     ap.add_argument("--label", default="run", help="本次结果的名字，存到 eval/results/<label>.json")
     ap.add_argument("--compare", default=None, help="与 eval/results/<name>.json 对比")
     ap.add_argument("--no-save", action="store_true")
@@ -402,7 +444,6 @@ def main():
     p = Path(args.image_meta)
     if p.exists():
         image_meta = json.loads(p.read_text(encoding="utf-8"))
-
     log_dir = Path(args.log_dir)
     if not log_dir.exists():
         sys.exit(f"日志目录不存在: {log_dir}")
@@ -418,6 +459,8 @@ def main():
         if args.after and s["ts"] < args.after:
             continue
         if args.prompt_version and s["prompt_version"] != args.prompt_version:
+            continue
+        if args.entities and not (s["entities_version"] or "").startswith(args.entities):
             continue
         if s["status"] != "OK":
             continue
@@ -443,8 +486,24 @@ def main():
             print(f"         {v}: {c} 张")
         print("         请加 --prompt-version 指定其中一个版本后重跑。\n")
 
-    per_sample = score(samples, gt_cfg, image_meta)
-    summary = summarize(per_sample, gt_cfg)
+    # 同一 prompt 版本下主体清单可能已经变过，这同样会让结果不可比
+    ent_versions = Counter(s["entities_version"] for s in samples if s["entities_version"])
+    if len(ent_versions) > 1 and not args.entities:
+        print("[警告] 本次统计混入了多份主体清单，prompt 内容实际不同：")
+        for v, c in sorted(ent_versions.items()):
+            print(f"         {v}: {c} 张")
+        print("         请加 --entities 指定其中一份后重跑。\n")
+
+    # 闭集模式自动识别：所有样本都给了 buyer_entity_id 时，改用 9 字段口径。
+    closed_set = all("buyer_entity_id" in s["raw"] for s in samples)
+    fields = (gt_cfg.get("scored_fields_closedset") if closed_set
+              else None) or gt_cfg["scored_fields"]
+    if closed_set:
+        print("[口径] 检测到闭集模式（buyer_entity_id），受评字段 9 个；")
+        print("       与 v1/v2 的8个10字段口径分母不同，字段级数字不可直接对比。\n")
+
+    per_sample = score(samples, gt_cfg, image_meta, fields)
+    summary = summarize(per_sample, gt_cfg, fields)
 
     meta = {
         "label": args.label,
@@ -453,6 +512,9 @@ def main():
         "provider": samples[0]["provider"],
         "model": samples[0]["model"],
         "prompt_versions": sorted({s["prompt_version"] for s in samples}),
+        "entities_versions": sorted({s["entities_version"] for s in samples if s["entities_version"]}),
+        "closed_set": closed_set,
+        "scored_fields": fields,
     }
     print(report(summary, per_sample, meta))
 

@@ -23,15 +23,28 @@ PARTY_FIELDS = ["buyer_name", "buyer_tax_id", "seller_name", "seller_tax_id"]
 
 KIND_LABEL = {
     "swapped": "与对方栏完全对调",
+    "entity_polluted": "被填成主体清单里的公司",
     "swapped_near_miss": "对调+字形错",
     "near_miss": "字形错",
     "unrelated": "幻觉/串栏",
     "missing": "空值",
 }
 
+# 闭集模式下，购买方由 buyer_entity_id 独立决定，不受销售方栏影响。
+# 此时销售方栏出现本公司，只能说明销售方那一栏错了，
+# 不能叫“对调”—— 真对调要求购买方一侧也拿到了销售方的信息。
+_ENTITIES_PATH = Path(__file__).resolve().parent.parent / "app" / "services" / "buyer_entities.json"
+try:
+    _ents = json.loads(_ENTITIES_PATH.read_text(encoding="utf-8"))["entities"]
+    ENTITY_NAMES = {e["name"] for e in _ents}
+    ENTITY_TAXES = {e["tax_id"] for e in _ents}
+except OSError:
+    ENTITY_NAMES, ENTITY_TAXES = set(), set()
+
 FIELD_CN = {
     "invoice_code": "发票代码",
     "issue_date": "开票日期",
+    "buyer_entity_id": "购方主体ID",
     "buyer_name": "购买方名称",
     "buyer_tax_id": "购买方税号",
     "seller_name": "销售方名称",
@@ -80,16 +93,44 @@ def main():
     print()
 
     # 给每张有问题的图归一个"主要问题"
+    # 闭集模式下 buyer_name/buyer_tax_id 不参与评分，只看实际存在的字段
+    def kinds_of(r):
+        return [r["fields"][f].get("kind") for f in PARTY_FIELDS if f in r["fields"]]
+
+    def closed_set(r):
+        return "buyer_entity_id" in r["fields"]
+
+    def buyer_ok(r):
+        d = r["fields"].get("buyer_entity_id")
+        return d["raw_ok"] if d else None
+
+    def seller_is_entity(r):
+        """销售方栏被填成了主体清单里的公司？"""
+        sn = (r["fields"].get("seller_name") or {}).get("raw")
+        st = (r["fields"].get("seller_tax_id") or {}).get("raw")
+        return sn in ENTITY_NAMES or st in ENTITY_TAXES
+
     def main_issue(r):
+        k = kinds_of(r)
+        if closed_set(r):
+            # 购买方独立判定：先看 ID 对不对，再看销售方
+            if not buyer_ok(r):
+                return "F. 主体选错"
+            if seller_is_entity(r):
+                return "G. 清单污染（销售方栏被填成清单主体）"
+            if "unrelated" in k:
+                return "C. 销售方幻觉/串栏"
+            if "near_miss" in k or "swapped" in k or "swapped_near_miss" in k:
+                return "D. 销售方字形错误"
+            return "E. 仅数值/日期字段出错"
+        # 非闭集（v1/v2）：买卖双方都由模型自由抽取，对调判定成立
         if not r["direction_ok"]:
-            kinds = {r["fields"][f].get("kind") for f in PARTY_FIELDS}
-            if "unrelated" in kinds:
+            if "unrelated" in set(k):
                 return "A. 方向错 + 有幻觉串栏"
             return "B. 买卖方对调"
-        party_kinds = [r["fields"][f].get("kind") for f in PARTY_FIELDS]
-        if "unrelated" in party_kinds:
+        if "unrelated" in k:
             return "C. 主体字段幻觉/串栏"
-        if "near_miss" in party_kinds:
+        if "near_miss" in k:
             return "D. 主体字段字形错误"
         return "E. 仅数值/日期字段出错"
 
@@ -113,6 +154,9 @@ def main():
                 if d["raw_ok"]:
                     continue
                 kind = d.get("kind")
+                # 闭集下“swapped”只意味着值等于对方栏的 GT，不代表发生了对调
+                if kind in ("swapped", "swapped_near_miss") and "buyer_entity_id" in r["fields"]:
+                    kind = "entity_polluted"
                 tag = f"  [{KIND_LABEL[kind]}]" if kind and kind in KIND_LABEL else ""
                 diff = char_diff(d["gt"], d["raw"]) if kind in ("near_miss", None) else ""
                 print(f"    {FIELD_CN.get(f, f):<10} 应为 {d['gt']}")

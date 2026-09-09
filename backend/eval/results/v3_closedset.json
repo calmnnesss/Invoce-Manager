@@ -1,0 +1,5076 @@
+{
+  "meta": {
+    "label": "v3_closedset",
+    "log_dir": "/home/lucas/code/Invoice-Manager/backend/logs/llm",
+    "after": null,
+    "provider": "qwen",
+    "model": "qwen-vl-max",
+    "prompt_versions": [
+      "v3"
+    ],
+    "closed_set": true,
+    "scored_fields": [
+      "invoice_code",
+      "issue_date",
+      "buyer_entity_id",
+      "seller_name",
+      "seller_tax_id",
+      "amount",
+      "tax_amount",
+      "total_with_tax",
+      "tax_rate"
+    ]
+  },
+  "summary": {
+    "n": 51,
+    "fields": {
+      "invoice_code": {
+        "raw_ok": 51,
+        "raw_acc": 1.0,
+        "clean_ok": 51,
+        "clean_acc": 1.0,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "issue_date": {
+        "raw_ok": 50,
+        "raw_acc": 0.9803921568627451,
+        "clean_ok": 50,
+        "clean_acc": 0.9803921568627451,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "buyer_entity_id": {
+        "raw_ok": 45,
+        "raw_acc": 0.8823529411764706,
+        "clean_ok": 0,
+        "clean_acc": 0.0,
+        "cleaner_dropped": 6,
+        "cleaner_fixed": 0
+      },
+      "seller_name": {
+        "raw_ok": 20,
+        "raw_acc": 0.39215686274509803,
+        "clean_ok": 20,
+        "clean_acc": 0.39215686274509803,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "seller_tax_id": {
+        "raw_ok": 32,
+        "raw_acc": 0.6274509803921569,
+        "clean_ok": 32,
+        "clean_acc": 0.6274509803921569,
+        "cleaner_dropped": 3,
+        "cleaner_fixed": 0
+      },
+      "amount": {
+        "raw_ok": 49,
+        "raw_acc": 0.9607843137254902,
+        "clean_ok": 49,
+        "clean_acc": 0.9607843137254902,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "tax_amount": {
+        "raw_ok": 47,
+        "raw_acc": 0.9215686274509803,
+        "clean_ok": 47,
+        "clean_acc": 0.9215686274509803,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "total_with_tax": {
+        "raw_ok": 46,
+        "raw_acc": 0.9019607843137255,
+        "clean_ok": 46,
+        "clean_acc": 0.9019607843137255,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      },
+      "tax_rate": {
+        "raw_ok": 51,
+        "raw_acc": 1.0,
+        "clean_ok": 51,
+        "clean_acc": 1.0,
+        "cleaner_dropped": 0,
+        "cleaner_fixed": 0
+      }
+    },
+    "direction_ok": 35,
+    "direction_acc": 0.6862745098039216,
+    "direction_swapped": 1,
+    "exact_match": 16,
+    "exact_match_acc": 0.3137254901960784,
+    "field_acc_micro": 0.8518518518518519,
+    "arith_fail": 3,
+    "party_error_kinds": {
+      "exact": 52,
+      "near_miss": 15,
+      "swapped": 22,
+      "swapped_near_miss": 2,
+      "unrelated": 11
+    },
+    "by_orientation": {
+      "portrait": {
+        "n": 44,
+        "direction_ok": 31,
+        "direction_acc": 0.7045454545454546
+      },
+      "landscape": {
+        "n": 7,
+        "direction_ok": 4,
+        "direction_acc": 0.5714285714285714
+      }
+    }
+  },
+  "per_sample": [
+    {
+      "file": "b0.jpg",
+      "invoice_id": 84,
+      "log": "20260908-084857-538116_invoice-84_b0.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b1.jpg",
+      "invoice_id": 85,
+      "log": "20260908-084651-016146_invoice-85_b1.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "1211.11",
+          "clean": "1211.11",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "205.89",
+          "clean": "205.89",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "1417.00",
+          "clean": "1417.00",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b10.jpg",
+      "invoice_id": 94,
+      "log": "20260908-085056-734093_invoice-94_b10.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州品乐贸易有限公司",
+          "clean": "广州品乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b11.jpg",
+      "invoice_id": 95,
+      "log": "20260908-085201-638999_invoice-95_b11.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "44030083885931",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false,
+          "kind": "swapped_near_miss"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2527.18",
+          "clean": "2527.18",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "460.00",
+          "clean": "460.00",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b12.jpg",
+      "invoice_id": 96,
+      "log": "20260908-084839-360885_invoice-96_b12.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b13.jpg",
+      "invoice_id": 97,
+      "log": "20260908-085202-394602_invoice-97_b13.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳东贸易有限公司",
+          "clean": "深圳东贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b14.jpg",
+      "invoice_id": 98,
+      "log": "20260908-084614-957441_invoice-98_b14.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b15.jpg",
+      "invoice_id": 99,
+      "log": "20260908-085209-402310_invoice-99_b15.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b16.jpg",
+      "invoice_id": 100,
+      "log": "20260908-085118-124354_invoice-100_b16.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b17.jpg",
+      "invoice_id": 101,
+      "log": "20260908-084622-032797_invoice-101_b17.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b18.jpg",
+      "invoice_id": 102,
+      "log": "20260908-084629-053612_invoice-102_b18.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "210.64",
+          "clean": "210.64",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": false,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b19.jpg",
+      "invoice_id": 103,
+      "log": "20260908-085132-229935_invoice-103_b19.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2018-06-12",
+          "clean": "2018-06-12",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶乐贸易有限公司",
+          "clean": "广州晶乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b2.jpg",
+      "invoice_id": 86,
+      "log": "20260908-084949-906136_invoice-86_b2.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b20.jpg",
+      "invoice_id": 104,
+      "log": "20260908-085216-033701_invoice-104_b20.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳晶东贸易有限公司",
+          "clean": "深圳晶东贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "9144010166041243T",
+          "clean": "9144010166041243T",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b21.jpg",
+      "invoice_id": 105,
+      "log": "20260908-084636-510797_invoice-105_b21.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b22.jpg",
+      "invoice_id": 106,
+      "log": "20260908-085149-058833_invoice-106_b22.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "44030083885931",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false,
+          "kind": "swapped_near_miss"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b23.jpg",
+      "invoice_id": 107,
+      "log": "20260908-084725-545350_invoice-107_b23.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "4402881463108",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b24.jpg",
+      "invoice_id": 108,
+      "log": "20260908-084732-819887_invoice-108_b24.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳晶东贸易有限公司",
+          "clean": "深圳晶东贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b25.jpg",
+      "invoice_id": 109,
+      "log": "20260908-084941-793793_invoice-109_b25.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州市喜乐贸易有限公司",
+          "clean": "广州市喜乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b26.jpg",
+      "invoice_id": 110,
+      "log": "20260908-085223-069940_invoice-110_b26.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州品乐贸易有限公司",
+          "clean": "广州品乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": false,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b27.jpg",
+      "invoice_id": 111,
+      "log": "20260908-084746-108627_invoice-111_b27.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b28.jpg",
+      "invoice_id": 112,
+      "log": "20260908-085003-351307_invoice-112_b28.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b29.jpg",
+      "invoice_id": 113,
+      "log": "20260908-084746-546335_invoice-113_b29.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b3.jpg",
+      "invoice_id": 87,
+      "log": "20260908-085010-621710_invoice-87_b3.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b30.jpg",
+      "invoice_id": 114,
+      "log": "20260908-084757-930787_invoice-114_b30.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b31.jpg",
+      "invoice_id": 115,
+      "log": "20260908-085034-615267_invoice-115_b31.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b32.jpg",
+      "invoice_id": 116,
+      "log": "20260908-085230-929213_invoice-116_b32.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b33.jpg",
+      "invoice_id": 117,
+      "log": "20260908-084806-613028_invoice-117_b33.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b34.jpg",
+      "invoice_id": 118,
+      "log": "20260908-085104-371598_invoice-118_b34.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b35.jpg",
+      "invoice_id": 119,
+      "log": "20260908-085237-661267_invoice-119_b35.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b36.jpg",
+      "invoice_id": 120,
+      "log": "20260908-084821-272733_invoice-120_b36.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶沃贸易有限公司",
+          "clean": "广州晶沃贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b37.jpg",
+      "invoice_id": 121,
+      "log": "20260908-084927-166474_invoice-121_b37.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "中国工商银行股份有限公司深圳圆岭支行",
+          "clean": "中国工商银行股份有限公司深圳圆岭支行",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "4000024709200172809",
+          "clean": "4000024709200172809",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": null,
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b38.jpg",
+      "invoice_id": 122,
+      "log": "20260908-084824-031251_invoice-122_b38.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶乐贸易有限公司",
+          "clean": "广州晶乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b39.jpg",
+      "invoice_id": 123,
+      "log": "20260908-084831-040052_invoice-123_b39.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b4.jpg",
+      "invoice_id": 88,
+      "log": "20260908-085025-167147_invoice-88_b4.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "中国工商银行股份有限公司深圳园岭支行",
+          "clean": "中国工商银行股份有限公司深圳园岭支行",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "4000024709200172809",
+          "clean": "4000024709200172809",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": null,
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b40.jpg",
+      "invoice_id": 124,
+      "log": "20260908-085245-198858_invoice-124_b40.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "中国工商银行股份有限公司深圳园岭支行",
+          "clean": "中国工商银行股份有限公司深圳园岭支行",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "400002470920172809",
+          "clean": "400002470920172809",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": null,
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b41.jpg",
+      "invoice_id": 74,
+      "log": "20260908-084652-987773_invoice-74_b41.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b42.jpg",
+      "invoice_id": 75,
+      "log": "20260908-084849-135504_invoice-75_b42.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "landscape"
+    },
+    {
+      "file": "b43.jpg",
+      "invoice_id": 76,
+      "log": "20260908-084905-614614_invoice-76_b43.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶乐贸易有限公司",
+          "clean": "广州晶乐贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b44.jpg",
+      "invoice_id": 77,
+      "log": "20260908-084919-917910_invoice-77_b44.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "seller",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": true,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b45.jpg",
+      "invoice_id": 78,
+      "log": "20260908-084710-317964_invoice-78_b45.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市龙华新区民治街道民治大道盛浩科技大厦A120707Bb-28806606",
+          "clean": "深圳市龙华新区民治街道民治大道盛浩科技大厦A120707Bb-28806606",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b46.jpg",
+      "invoice_id": 79,
+      "log": "20260908-084941-236111_invoice-79_b46.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州市黄埔区九龙镇九龙工业园凤凰三横路88号",
+          "clean": "广州市黄埔区九龙镇九龙工业园凤凰三横路88号",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b47.jpg",
+      "invoice_id": 80,
+      "log": "20260908-084956-152054_invoice-80_b47.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b48.jpg",
+      "invoice_id": 81,
+      "log": "20260908-084700-831357_invoice-81_b48.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州市番禺区九龙塘九龙工业园凤凰三横路99号",
+          "clean": "广州市番禺区九龙塘九龙工业园凤凰三横路99号",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b49.jpg",
+      "invoice_id": 82,
+      "log": "20260908-084912-371354_invoice-82_b49.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市购机汇网络有限公司",
+          "clean": "深圳市购机汇网络有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b5.jpg",
+      "invoice_id": 89,
+      "log": "20260908-085018-471920_invoice-89_b5.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶泉贸易有限公司",
+          "clean": "广州晶泉贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b50.jpg",
+      "invoice_id": 83,
+      "log": "20260908-084718-066245_invoice-83_b50.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b6.jpg",
+      "invoice_id": 90,
+      "log": "20260908-085042-092900_invoice-90_b6.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州晶东贸易有限公司",
+          "clean": "广州晶东贸易有限公司",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": true,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b7.jpg",
+      "invoice_id": 91,
+      "log": "20260908-085146-486013_invoice-91_b7.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E05",
+          "clean": null,
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": true,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳晶东贸易有限公司",
+          "clean": "深圳晶东贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "9144010664041243T",
+          "clean": "9144010664041243T",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b8.jpg",
+      "invoice_id": 92,
+      "log": "20260908-085131-463985_invoice-92_b8.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "广州盈东贸易有限公司",
+          "clean": "广州盈东贸易有限公司",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "near_miss"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "91440101664041243T",
+          "clean": "91440101664041243T",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "exact"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "3495.00",
+          "clean": "3495.00",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "seller",
+      "direction_ok": true,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": true,
+      "orientation": "portrait"
+    },
+    {
+      "file": "b9.jpg",
+      "invoice_id": 93,
+      "log": "20260908-085049-443805_invoice-93_b9.jpg_qwen_OK.log",
+      "fields": {
+        "invoice_code": {
+          "gt": "4400154130",
+          "raw": "4400154130",
+          "clean": "4400154130",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "issue_date": {
+          "gt": "2016-06-12",
+          "raw": "2016-06-12",
+          "clean": "2016-06-12",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "buyer_entity_id": {
+          "gt": "E01",
+          "raw": "E01",
+          "clean": null,
+          "raw_ok": true,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "seller_name": {
+          "gt": "广州晶东贸易有限公司",
+          "raw": "深圳市龙华新区民治街道康源科技大厦A13070755-23806606",
+          "clean": "深圳市龙华新区民治街道康源科技大厦A13070755-23806606",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "unrelated"
+        },
+        "seller_tax_id": {
+          "gt": "91440101664041243T",
+          "raw": "440300083885931",
+          "clean": "440300083885931",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false,
+          "kind": "swapped"
+        },
+        "amount": {
+          "gt": "2987.18",
+          "raw": "2987.18",
+          "clean": "2987.18",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_amount": {
+          "gt": "507.82",
+          "raw": "210.64",
+          "clean": "210.64",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "total_with_tax": {
+          "gt": "3495.00",
+          "raw": "507.82",
+          "clean": "507.82",
+          "raw_ok": false,
+          "clean_ok": false,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        },
+        "tax_rate": {
+          "gt": "17%",
+          "raw": "17%",
+          "clean": "17%",
+          "raw_ok": true,
+          "clean_ok": true,
+          "cleaner_dropped": false,
+          "cleaner_fixed": false
+        }
+      },
+      "buyer_side": "buyer",
+      "seller_side": "buyer",
+      "direction_ok": false,
+      "direction_swapped": false,
+      "exact_match": false,
+      "arith_ok": false,
+      "orientation": "portrait"
+    }
+  ]
+}
