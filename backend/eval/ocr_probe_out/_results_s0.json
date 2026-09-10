@@ -1,0 +1,1634 @@
+[
+  {
+    "file": "b0",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 10.481700658798218,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271524",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b1",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 12.320250988006592,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270242",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "205.89",
+    "total_with_tax": "壹仟肆佰壹拾柒圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b2",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": -1.1299264430999756,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 149,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 149
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8459
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269558",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b3",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.192462205886841,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269577",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b4",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.3187196254730225,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270870",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b5",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.79930567741394,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 139,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 139
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8449
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270824",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "null",
+    "tax_rate": "null"
+  },
+  {
+    "file": "b6",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.732378959655762,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 149,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 149
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8459
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270857",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b7",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.88175106048584,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270862",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b8",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 7.358829498291016,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270864",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b9",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.084935903549194,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269559",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b10",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 8.37607455253601,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270859",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b11",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.62640643119812,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270837",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b12",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.4980456829071045,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269568",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b13",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.083032131195068,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270855",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b14",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.202577114105225,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270860",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b15",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.941797494888306,
+    "usage": {
+      "input_tokens": 8337,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8114,
+      "input_tokens_details": {
+        "image_tokens": 8114,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8491
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271530",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b16",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.791685581207275,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271532",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b17",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.472595691680908,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271544",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b18",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.476227521896362,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 171,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 171
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8481
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271543",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b19",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.2375288009643555,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271542",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b20",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.347450256347656,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271541",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b21",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.339435338973999,
+    "usage": {
+      "input_tokens": 8337,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8114,
+      "input_tokens_details": {
+        "image_tokens": 8114,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8491
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271540",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b22",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.316329002380371,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269549",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b23",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.692029237747192,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270840",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b24",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.79965877532959,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270841",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b25",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 7.294050931930542,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270830",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b26",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.356425523757935,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270798",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b27",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.120485782623291,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270871",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b28",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.347568988800049,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270791",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b29",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.111278533935547,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270793",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b30",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.9168102741241455,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270803",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b31",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.673105478286743,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 166,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 166
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8476
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269556",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b32",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.9178948402404785,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269562",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b33",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.706478595733643,
+    "usage": {
+      "input_tokens": 8337,
+      "output_tokens": 149,
+      "characters": 0,
+      "image_tokens": 8114,
+      "input_tokens_details": {
+        "image_tokens": 8114,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 149
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8486
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269563",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b34",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.968977928161621,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269557",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b35",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 7.807356119155884,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 153,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 153
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8463
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270789",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.8",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b36",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 7.542782783508301,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 153,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 153
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8463
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270818",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.8",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b37",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.448703289031982,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 170,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 170
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8480
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12269560",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "507.8",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b38",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 4.888131141662598,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 172,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 172
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8482
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271500",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "￥507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b39",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.770525932312012,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 171,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 171
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8481
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271523",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b40",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 11.77151346206665,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270847",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b41",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": -0.33382272720336914,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 179,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 179
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8489
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271538",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "深圳市购机汇网络有限公司",
+    "buyer_tax_id": "440300083885931",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "金额",
+    "tax_amount": "税额",
+    "total_with_tax": "价税合计(大写)",
+    "tax_rate": "税率"
+  },
+  {
+    "file": "b42",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.365655899047852,
+    "usage": {
+      "input_tokens": 8337,
+      "output_tokens": 139,
+      "characters": 0,
+      "image_tokens": 8114,
+      "input_tokens_details": {
+        "image_tokens": 8114,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 139
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8476
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271533",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "null",
+    "tax_rate": "null"
+  },
+  {
+    "file": "b43",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.04423189163208,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 179,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 179
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8489
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271522",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "深圳市购机汇网络有限公司",
+    "buyer_tax_id": "440300083885931",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "金额",
+    "tax_amount": "税额",
+    "total_with_tax": "价税合计(大写)",
+    "tax_rate": "税率"
+  },
+  {
+    "file": "b44",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 6.964847564697266,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12271513",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b45",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.456191062927246,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270232",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b46",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.85058331489563,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 154,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 154
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8464
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270282",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "null",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b47",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 7.094016075134277,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 166,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 166
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8476
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270259",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "null",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b48",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.047075986862183,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 180,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 180
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8490
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270252",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "深圳市购机汇网络有限公司",
+    "buyer_tax_id": "440300083885931",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "金额",
+    "tax_amount": "税额",
+    "total_with_tax": "价税合计(大写)",
+    "tax_rate": "17%"
+  },
+  {
+    "file": "b49",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.223110198974609,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 177,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 177
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8487
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270262",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "深圳市购机汇网络有限公司",
+    "buyer_tax_id": "440300083885931",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "金额",
+    "tax_amount": "税额",
+    "total_with_tax": "价税合计",
+    "tax_rate": "税率"
+  },
+  {
+    "file": "b50",
+    "rotate": true,
+    "n": 8192,
+    "elapsed": 5.197443008422852,
+    "usage": {
+      "input_tokens": 8310,
+      "output_tokens": 171,
+      "characters": 0,
+      "image_tokens": 8087,
+      "input_tokens_details": {
+        "image_tokens": 8087,
+        "text_tokens": 223
+      },
+      "output_tokens_details": {
+        "text_tokens": 171
+      },
+      "prompt_tokens_details": {},
+      "total_tokens": 8481
+    },
+    "invoice_code": "4400154130",
+    "invoice_number": "12270234",
+    "issue_date": "2016年06月12日",
+    "buyer_name": "null",
+    "buyer_tax_id": "null",
+    "seller_name": "广州晶东贸易有限公司",
+    "seller_tax_id": "91440101664041243T",
+    "amount": "null",
+    "tax_amount": "507.82",
+    "total_with_tax": "叁仟肆佰玖拾伍圆整",
+    "tax_rate": "17%"
+  }
+]

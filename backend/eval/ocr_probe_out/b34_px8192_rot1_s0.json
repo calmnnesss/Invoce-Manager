@@ -1,0 +1,38 @@
+{
+  "file": "b34",
+  "rotate": true,
+  "schema": "s0",
+  "max_pixels_n": 8192,
+  "max_pixels": 8388608,
+  "model": "qwen3.5-ocr",
+  "elapsed_s": 4.97,
+  "kv_result": {
+    "价税合计": "叁仟肆佰玖拾伍圆整",
+    "发票代码": "4400154130",
+    "发票号码": "12269557",
+    "开票日期": "2016年06月12日",
+    "税率": "17%",
+    "税额": "507.82",
+    "购买方名称": "null",
+    "购买方纳税人识别号": "null",
+    "金额": "null",
+    "销售方名称": "广州晶东贸易有限公司",
+    "销售方纳税人识别号": "null"
+  },
+  "text": "```json\n{\n    \"发票代码\": \"4400154130\",\n    \"发票号码\": \"12269557\",\n    \"开票日期\": \"2016年06月12日\",\n    \"购买方名称\": \"null\",\n    \"购买方纳税人识别号\": \"null\",\n    \"销售方名称\": \"广州晶东贸易有限公司\",\n    \"销售方纳税人识别号\": \"null\",\n    \"金额\": \"null\",\n    \"税额\": \"507.82\",\n    \"价税合计\": \"叁仟肆佰玖拾伍圆整\",\n    \"税率\": \"17%\"\n}\n```",
+  "usage": {
+    "input_tokens": 8310,
+    "output_tokens": 154,
+    "characters": 0,
+    "image_tokens": 8087,
+    "input_tokens_details": {
+      "image_tokens": 8087,
+      "text_tokens": 223
+    },
+    "output_tokens_details": {
+      "text_tokens": 154
+    },
+    "prompt_tokens_details": {},
+    "total_tokens": 8464
+  }
+}
