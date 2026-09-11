@@ -16,6 +16,8 @@ from collections import defaultdict
 from pathlib import Path
 
 PROMPT_RE = re.compile(r"^Prompt\s*:\s*(\S+)\s*$", re.M)
+POST_RE = re.compile(r"^Postprocess\s*:\s*(\S+)\s*$", re.M)
+ENT_RE = re.compile(r"^Entities\s*:\s*(\S+?)#", re.M)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--log-dir", default="/app/logs/llm")
@@ -26,10 +28,18 @@ args = ap.parse_args()
 log_dir = Path(args.log_dir)
 groups = defaultdict(list)
 for p in sorted(log_dir.glob("*.log")):
-    head = p.read_text(encoding="utf-8", errors="replace")[:800]
+    head = p.read_text(encoding="utf-8", errors="replace")[:1200]
     m = PROMPT_RE.search(head)
     v = m.group(1) if m and m.group(1) != "(unknown)" else "v1"
-    groups[v].append(p)
+    # 同一个 prompt 版本下，主体清单和后处理版本也会变 —— 三个维度都要进目录名，
+    # 否则几批不同配置的结果会被归到一起，以后分不出来。
+    em = ENT_RE.search(head)
+    pm = POST_RE.search(head)
+    parts = [v]
+    if em:
+        parts.append(em.group(1))
+    parts.append(f"pp-{pm.group(1)}" if pm else "pp-none")
+    groups["_".join(parts)].append(p)
 
 if not groups:
     raise SystemExit("没有待归档的日志")

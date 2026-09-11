@@ -81,3 +81,8 @@ coverage/
 
 attachments/
 runs/
+/backend/eval/ocr_probe_out_roton_n8192_0910/
+/backend/eval/reports/
+/backend/eval/ocr_probe_out_rotoff_n8192_2f/
+/backend/eval/ocr_probe_out_rotoff_n8192_11f/
+/backend/eval/ocr_probe_out/
