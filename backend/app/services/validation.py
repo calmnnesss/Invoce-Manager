@@ -44,9 +44,13 @@ class Check:
     rule_id: str
     status: str
     detail: str = ""
+    # 结果涉及的字段：失败时是出问题的字段，通过时是实际参与校验的字段（可能为空）。
+    # 前端据此把问题贴到具体字段下，不必去解析 detail 文本。
+    fields: List[str] = dc_field(default_factory=list)
 
-    def as_dict(self) -> Dict[str, str]:
-        return {"rule_id": self.rule_id, "status": self.status, "detail": self.detail}
+    def as_dict(self) -> Dict[str, Any]:
+        return {"rule_id": self.rule_id, "status": self.status,
+                "detail": self.detail, "fields": list(self.fields)}
 
 
 @dataclass
@@ -138,15 +142,18 @@ def check_seller_is_entity(fields: Dict[str, Any], entities: List[Dict]) -> Chec
     if not sn and not st:
         return Check("seller_is_entity", STATUS_SKIPPED, "销售方名称与税号均为空")
 
-    hits = []
+    hits, hit_fields = [], []
     if sn and sn in names:
         hits.append(f"名称命中清单: {fields.get('seller_name')}")
+        hit_fields.append("seller_name")
     if st and st in taxes:
         hits.append(f"税号命中清单: {fields.get('seller_tax_id')}")
+        hit_fields.append("seller_tax_id")
 
     if hits:
-        return Check("seller_is_entity", STATUS_FAIL, "；".join(hits))
-    return Check("seller_is_entity", STATUS_PASS)
+        return Check("seller_is_entity", STATUS_FAIL, "；".join(hits), hit_fields)
+    checked = [k for k, v in (("seller_name", sn), ("seller_tax_id", st)) if v]
+    return Check("seller_is_entity", STATUS_PASS, fields=checked)
 
 
 def check_amount_sum(fields: Dict[str, Any]) -> Check:
@@ -155,6 +162,7 @@ def check_amount_sum(fields: Dict[str, Any]) -> Check:
     t = parse_amount(fields.get("tax_amount"))
     tot = parse_amount(fields.get("total_with_tax"))
 
+    involved = ["amount", "tax_amount", "total_with_tax"]
     missing = [k for k, v in (("amount", a), ("tax_amount", t), ("total_with_tax", tot))
                if v is None]
     if missing:
@@ -165,8 +173,9 @@ def check_amount_sum(fields: Dict[str, Any]) -> Check:
         return Check(
             "amount_sum", STATUS_FAIL,
             f"{a:.2f} + {t:.2f} = {a + t:.2f}，与价税合计 {tot:.2f} 相差 {diff:.2f}",
+            involved,
         )
-    return Check("amount_sum", STATUS_PASS)
+    return Check("amount_sum", STATUS_PASS, fields=involved)
 
 
 def check_tax_rate_consistency(fields: Dict[str, Any]) -> Check:
@@ -186,6 +195,7 @@ def check_tax_rate_consistency(fields: Dict[str, Any]) -> Check:
         return Check("tax_rate_consistency", STATUS_SKIPPED,
                      f"字段缺失或无法解析: {', '.join(missing)}")
 
+    involved = ["amount", "tax_amount", "tax_rate"]
     expected = a * r
     diff = abs(t - expected)
     if diff > AMOUNT_TOLERANCE:
@@ -193,8 +203,9 @@ def check_tax_rate_consistency(fields: Dict[str, Any]) -> Check:
             "tax_rate_consistency", STATUS_FAIL,
             f"金额 {a:.2f} x 税率 {r:.4f} = {expected:.2f}，"
             f"与税额 {t:.2f} 相差 {diff:.2f}",
+            involved,
         )
-    return Check("tax_rate_consistency", STATUS_PASS)
+    return Check("tax_rate_consistency", STATUS_PASS, fields=involved)
 
 
 # --------------------------------------------------------------------------

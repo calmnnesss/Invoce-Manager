@@ -272,8 +272,8 @@ function LLMConfigModal({ open, onClose, onConfigured }: LLMConfigModalProps) {
             />
           ) : (
             <Alert
-              message="未配置LLM服务"
-              description="LLM 为可选增强功能，可提升发票识别准确率与比对能力。不配置也可使用 OCR-only 流程。"
+              message="未配置模型服务"
+              description="未配置模型服务时无法自动识别发票。文字识别需要通义千问（DashScope）API Key；再配置一个视觉模型可获得两路交叉核验。"
               type="warning"
               showIcon
               icon={<ExclamationCircleOutlined />}

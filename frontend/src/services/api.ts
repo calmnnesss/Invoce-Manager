@@ -1,8 +1,10 @@
 import axios from 'axios';
 import type {
+  FieldUpdateBody,
   Invoice,
   InvoiceDetail,
   InvoiceListResponse,
+  QrRetryResponse,
   Statistics,
   UploadResponse,
   LLMStatusResponse,
@@ -10,6 +12,9 @@ import type {
   LLMConfigResponse,
   LLMTestResponse,
   ModelsResponse,
+  AmountRules,
+  BuyerEntityInput,
+  ReviewSettings,
 } from '../types/invoice';
 
 const api = axios.create({
@@ -18,6 +23,15 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+/** 后端 HTTPException 的中文 detail；没有就用兜底文案 */
+export function errorDetail(error: unknown, fallback: string): string {
+  if (error && typeof error === 'object' && 'response' in error) {
+    const detail = (error as { response?: { data?: { detail?: unknown } } }).response?.data?.detail;
+    if (typeof detail === 'string' && detail) return detail;
+  }
+  return fallback;
+}
 
 // Health check
 export const healthCheck = async () => {
@@ -64,6 +78,11 @@ export const getInvoice = async (id: number): Promise<InvoiceDetail> => {
 // Get invoice file URL
 export const getInvoiceFileUrl = (id: number): string => {
   return `/api/invoices/${id}/file`;
+};
+
+// 原件预览：图片按 EXIF 转正、PDF 渲染首页，统一为 JPEG。/file 带 attachment，只用于下载
+export const getInvoicePreviewUrl = (id: number): string => {
+  return `/api/invoices/${id}/preview`;
 };
 
 // Update invoice
@@ -125,17 +144,14 @@ export const getStatistics = async (
   return response.data;
 };
 
-// Resolve parsing diff
-export const resolveDiff = async (
+// 确认或修改单个字段。后端同时写识别明细与发票字段、重算税额与合计、重新校验，
+// 返回完整详情，调用方直接替换状态即可
+export const updateInvoiceField = async (
   invoiceId: number,
-  diffId: number,
-  source: 'ocr' | 'llm' | 'custom',
-  customValue?: string
-): Promise<{ message: string; field_name: string; final_value: string; all_resolved: boolean }> => {
-  const response = await api.post(`/invoices/${invoiceId}/diffs/${diffId}/resolve`, {
-    source,
-    custom_value: customValue,
-  });
+  fieldName: string,
+  body: FieldUpdateBody
+): Promise<InvoiceDetail> => {
+  const response = await api.patch(`/invoices/${invoiceId}/fields/${fieldName}`, body);
   return response.data;
 };
 
@@ -152,6 +168,14 @@ export const reprocessInvoice = async (
   invoiceId: number
 ): Promise<{ message: string; invoice_id: number }> => {
   const response = await api.post(`/invoices/${invoiceId}/process`);
+  return response.data;
+};
+
+// 手动触发二维码解码。该线路不进默认链路 —— 它在当前测试集上
+// 51/51 解码失败，每张都跑只是白费时间；解出来时它是确定性来源，
+// 优先级高于任何模型。
+export const retryQr = async (invoiceId: number): Promise<QrRetryResponse> => {
+  const response = await api.post(`/invoices/${invoiceId}/retry-qr`);
   return response.data;
 };
 
@@ -211,6 +235,24 @@ export const getAvailableModels = async (
     params.vision_only = true;
   }
   const response = await api.get('/settings/models', { params });
+  return response.data;
+};
+
+// 业务配置：购买方主体清单、金额校验规则
+export const getReviewSettings = async (): Promise<ReviewSettings> => {
+  const response = await api.get('/settings/review');
+  return response.data;
+};
+
+export const updateBuyerEntities = async (
+  entities: BuyerEntityInput[]
+): Promise<ReviewSettings> => {
+  const response = await api.put('/settings/buyer-entities', { entities });
+  return response.data;
+};
+
+export const updateAmountRules = async (rules: AmountRules): Promise<ReviewSettings> => {
+  const response = await api.put('/settings/amount-rules', rules);
   return response.data;
 };
 

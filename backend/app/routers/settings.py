@@ -81,6 +81,7 @@ def _require_llm_config_token(
 
 from app.config import get_settings, clear_settings_cache
 from app.services.llm_service import get_llm_service, reset_llm_service, PROVIDERS
+from app.services.qwen_ocr_service import reset_qwen_ocr_service
 from app.services.model_registry import get_models_with_fallback
 
 router = APIRouter()
@@ -225,6 +226,8 @@ async def configure_llm(
         # Clear caches to reload settings
         clear_settings_cache()
         reset_llm_service()
+        # qwen-ocr 是唯一的文字识别线路，用的也是 QWEN_API_KEY，不重建的话新 Key 要重启才生效
+        reset_qwen_ocr_service()
 
         # Verify configuration
         new_settings = get_settings()

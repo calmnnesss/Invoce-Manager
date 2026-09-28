@@ -63,6 +63,15 @@ class Settings(BaseSettings):
     # Unknown values fall back to prompts.DEFAULT_PROMPT_VERSION.
     prompt_version: str = "v3.1"
 
+    # v6 管线：qwen3.5-ocr 抽取线路。参数的实测依据见
+    # app/services/qwen_ocr_service.py 的模块注释。
+    ocr_enable_rotate: bool = False
+    ocr_max_pixels_n: int = 8192
+    dashscope_base_url: str = ""
+
+    # 二维码线路默认不跑，由结果页的“用二维码重试”手动触发。
+    qr_enabled: bool = False
+
     # App
     debug: bool = True
 

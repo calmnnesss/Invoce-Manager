@@ -9,11 +9,9 @@ asyncpg==0.29.0
 alembic==1.13.1
 psycopg2-binary==2.9.9
 
-# OCR - using headless OpenCV for Docker
-# Pin to v2.x for stable API and numpy 1.x for opencv compatibility
+# QR decoding (qr_service): headless OpenCV for Docker; numpy 1.x for opencv compatibility.
+# 文字识别走 qwen3.5-ocr（dashscope，见下方）；本地 PaddleOCR 已存档到 archive/paddle-ocr/
 numpy<2.0
-paddlepaddle==2.6.2
-paddleocr==2.7.3
 opencv-python-headless>=4.8.0
 
 # LLM (optional)
@@ -25,7 +23,6 @@ pydantic==2.5.3
 pydantic-settings==2.1.0
 Pillow==10.2.0
 pdf2image==1.17.0
-pdfplumber==0.10.3
 openpyxl==3.1.2
 
 # Rate limiting
@@ -35,3 +32,5 @@ slowapi==0.1.9
 pytest==7.4.4
 pytest-asyncio==0.23.3
 httpx==0.26.0
+dashscope>=1.22.2
+pyzbar>=0.1.9

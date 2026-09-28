@@ -1,6 +1,7 @@
 """Invoice processing service."""
 
 import asyncio
+import json
 import logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Optional, Dict, Any, List, Tuple
@@ -8,12 +9,24 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
 
 from app.models.invoice import Invoice, OcrResult, LlmResult, ParsingDiff, InvoiceStatus
-from app.services.ocr_service import get_ocr_service, get_field_extractor
 from app.services.llm_service import get_llm_service, LLMCallContext
+from app.services.qwen_ocr_service import (
+    OCR_LINE_VERSION,
+    TRUSTED_KEYS,
+    get_qwen_ocr_service,
+)
+from app.services import app_settings
+from app.services.fusion import PIPELINE_VERSION, OCR_KEY_MAP, fuse
+from app.services.review import fusion_row_values
 from app.config import get_settings
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+# v6 不再使用本地 PaddleOCR 线路（已存档到仓库根目录 archive/paddle-ocr/）。
+# 两路仲裁 _compare_and_resolve 也一并停用 —— 它会拿一路的值去填补另一路的
+# 空字段，会把 fuse() 里 seller_is_entity 命中后的置空又填回去，
+# 让拒绝机制在端到端流程里失效。
 
 # Separate thread pools for OCR and LLM to maximize throughput
 # OCR is CPU-bound (image processing), LLM is I/O-bound (API calls)
@@ -22,8 +35,9 @@ _ocr_executor = ThreadPoolExecutor(max_workers=settings.ocr_max_workers)
 _llm_executor = ThreadPoolExecutor(max_workers=settings.llm_max_workers)
 logger.info(f"Initialized thread pools: OCR={settings.ocr_max_workers}, LLM={settings.llm_max_workers}")
 
-# Fields to compare between OCR and LLM
+# 重新解析前要清空的识别字段
 COMPARABLE_FIELDS = [
+    'invoice_code',
     'invoice_number',
     'issue_date',
     'buyer_name',
@@ -38,32 +52,29 @@ COMPARABLE_FIELDS = [
 ]
 
 
+def _run_qwen_ocr(file_data: bytes, file_type: str, invoice_id: int,
+                  file_name: str) -> Dict[str, Any]:
+    """v6 的 OCR 线路：qwen3.5-ocr 结构化抽取。失败不抛，返回空结果。"""
+    svc = get_qwen_ocr_service()
+    suffix = ".pdf" if (file_type or "").lower() == "pdf" else f".{file_type or 'jpg'}"
+    res = svc.extract(file_data, suffix=suffix)
+    kv = res.get("kv_result") or {}
+    trusted = {k: kv.get(k) for k in TRUSTED_KEYS}
+    logger.info(
+        "Qwen OCR [invoice=%s file=%s]: %.1fs tokens=%s 采信字段=%s error=%s",
+        invoice_id, file_name, res.get("elapsed_s", 0),
+        res.get("usage", {}).get("total_tokens", "?"), trusted, res.get("error"),
+    )
+    return res
+
+
 def _reset_extracted_fields(invoice: Invoice) -> None:
     """Reset extracted fields to avoid stale values on reprocess."""
     for field_name in COMPARABLE_FIELDS:
         setattr(invoice, field_name, None)
 
 
-def _run_ocr(file_data: bytes, file_type: str) -> Tuple[str, float, Dict[str, Any]]:
-    """Run OCR processing in a separate thread.
-
-    Args:
-        file_data: Raw file bytes
-        file_type: File type (pdf, jpg, png, etc.)
-
-    Returns:
-        Tuple of (raw_text, confidence, extracted_fields)
-    """
-    ocr_service = get_ocr_service()
-    extractor = get_field_extractor()
-
-    if file_type == 'pdf':
-        raw_text, confidence, ocr_lines = ocr_service.process_pdf(file_data)
-    else:
-        raw_text, confidence, ocr_lines = ocr_service.process_image(file_data)
-
-    ocr_fields = extractor.extract_fields(raw_text, ocr_lines)
-    return raw_text, confidence, ocr_fields
+# v6 已移除 _run_ocr（本地 PaddleOCR 线路），改用 _run_qwen_ocr。
 
 
 def _run_llm_vision(
@@ -175,7 +186,8 @@ async def process_invoice(invoice_id: int, db: AsyncSession) -> bool:
         # Create tasks for parallel execution
         # OCR uses CPU-bound pool, LLM uses I/O-bound pool
         ocr_task = loop.run_in_executor(
-            _ocr_executor, _run_ocr, invoice.file_data, invoice.file_type
+            _ocr_executor, _run_qwen_ocr, invoice.file_data, invoice.file_type,
+            invoice_id, invoice.file_name,
         )
         llm_task = loop.run_in_executor(
             _llm_executor,
@@ -187,20 +199,21 @@ async def process_invoice(invoice_id: int, db: AsyncSession) -> bool:
         )
 
         # Wait for both tasks to complete
-        logger.info(f"Running OCR and LLM vision in parallel for invoice {invoice_id}")
+        logger.info(f"Running Qwen OCR and LLM vision in parallel for invoice {invoice_id}")
         ocr_result_data, llm_fields = await asyncio.gather(ocr_task, llm_task)
 
-        # Unpack OCR results
-        raw_text, confidence, ocr_fields = ocr_result_data
+        ocr_kv = (ocr_result_data or {}).get("kv_result") or {}
+        ocr_fields = {en: ocr_kv.get(cn) for cn, en in OCR_KEY_MAP.items()}
         has_llm = _has_meaningful_fields(llm_fields)
 
-        logger.info(f"OCR completed: {len(ocr_fields)} fields extracted")
+        logger.info(f"Qwen OCR completed: {sum(1 for v in ocr_kv.values() if v)} fields returned")
         logger.info(f"LLM vision completed: {len(llm_fields)} fields extracted (has_llm={has_llm})")
 
         # Save OCR result
         ocr_result = OcrResult(
             invoice_id=invoice_id,
-            raw_text=raw_text,
+            raw_text=json.dumps(ocr_kv, ensure_ascii=False) if ocr_kv else None,
+            invoice_code=ocr_fields.get('invoice_code'),
             invoice_number=ocr_fields.get('invoice_number'),
             issue_date=ocr_fields.get('issue_date'),
             buyer_name=ocr_fields.get('buyer_name'),
@@ -219,6 +232,7 @@ async def process_invoice(invoice_id: int, db: AsyncSession) -> bool:
         if has_llm:
             llm_result = LlmResult(
                 invoice_id=invoice_id,
+                invoice_code=llm_fields.get('invoice_code'),
                 invoice_number=llm_fields.get('invoice_number'),
                 issue_date=llm_fields.get('issue_date'),
                 buyer_name=llm_fields.get('buyer_name'),
@@ -235,53 +249,48 @@ async def process_invoice(invoice_id: int, db: AsyncSession) -> bool:
         else:
             logger.info(f"LLM vision not available - invoice {invoice_id} using OCR-only flow")
 
-        # Compare OCR and LLM results, create diffs
-        final_fields, diffs = _compare_and_resolve(ocr_fields, llm_fields, has_llm)
+        # v6 融合：三路（当前二维码未启用，实为两路）逐字段选源。
+        # 传给 fuse() 的必须是 VLM 的原始响应（含 buyer_entity_id），
+        # 而不是 llm_service 已经查表回填过的 fields。
+        vlm_raw = llm_fields.get("_raw") or llm_fields
+        cfg = app_settings.current()
+        fusion = fuse(qr=None, ocr=ocr_kv, vlm=vlm_raw,
+                      entities=cfg.entities, rules=cfg.amount_rules)
+        final_fields = fusion.values
+        logger.info(
+            "Fusion [invoice=%s]: verdict=%s low=%s failed=%s degraded=%s",
+            invoice_id, fusion.verdict, fusion.low_confidence,
+            fusion.failed_rules, fusion.degraded,
+        )
 
         # Clear extracted fields so missing values don't keep stale data
         _reset_extracted_fields(invoice)
 
-        # Save parsing diffs
-        for diff in diffs:
-            parsing_diff = ParsingDiff(
-                invoice_id=invoice_id,
-                field_name=diff['field_name'],
-                ocr_value=diff['ocr_value'],
-                llm_value=diff['llm_value'],
-                final_value=diff['final_value'],
-                source=diff['source'],
-                resolved=0 if diff['needs_review'] else 1,
-            )
-            db.add(parsing_diff)
+        # 每字段的融合明细写回 ParsingDiff，前端据此做三路对比。
+        # 这里复用现有表结构：ocr_value / llm_value 存各路原始值，
+        # source 存融合后的来源（ocr / vlm / lookup / computed / qr）。
+        for fname, fr in fusion.fields.items():
+            db.add(ParsingDiff(invoice_id=invoice_id, **fusion_row_values(fname, fr)))
 
         # Update invoice with final data
         _update_invoice_from_fields(invoice, final_fields)
 
-        # Set status based on whether review is needed
-        # Check for conflicts in diffs
-        has_conflicts = any(d['needs_review'] for d in diffs)
-
-        # Check for missing critical fields (these require review)
-        critical_fields = [
-            'invoice_number',
-            'issue_date',
-            'total_with_tax',
-            'buyer_name',
-            'buyer_tax_id',
-            'seller_name',
-            'seller_tax_id',
-            'item_name',
-        ]
-        missing_fields = [f for f in critical_fields if not final_fields.get(f)]
-        missing_critical = bool(missing_fields)
-        if missing_critical:
-            logger.warning(f"Invoice {invoice_id} missing critical fields: {missing_fields}")
-
-        needs_review = has_conflicts or missing_critical
-        if needs_review:
-            invoice.status = InvoiceStatus.REVIEWING
-        else:
-            invoice.status = InvoiceStatus.CONFIRMED
+        # v6：审核状态直接由融合层的 verdict 决定。
+        # rejected 是 seller_is_entity 命中（销售方填成了本公司），必须人工；
+        # warn 包含“值存疑”和“来源单一”两种，当前合并处理。
+        needs_review = fusion.verdict != 'ok'
+        invoice.status = (
+            InvoiceStatus.REVIEWING if needs_review else InvoiceStatus.CONFIRMED
+        )
+        invoice.verdict = fusion.verdict
+        invoice.checks = [c.as_dict() for c in fusion.checks]
+        invoice.degraded = list(fusion.degraded)
+        invoice.nulled = list(fusion.nulled)
+        invoice.pipeline_version = PIPELINE_VERSION
+        if fusion.nulled:
+            logger.warning(
+                f"Invoice {invoice_id} 被拒绝，已置空字段: {fusion.nulled}"
+            )
 
         await db.commit()
         logger.info(f"Invoice {invoice_id} processed successfully (needs_review={needs_review})")
@@ -293,129 +302,17 @@ async def process_invoice(invoice_id: int, db: AsyncSession) -> bool:
         return False
 
 
-def _compare_and_resolve(
-    ocr_fields: Dict[str, Any],
-    llm_fields: Dict[str, Any],
-    has_llm: bool
-) -> Tuple[Dict[str, Any], List[Dict[str, Any]]]:
-    """Compare OCR and LLM results, resolve differences.
-
-    Args:
-        ocr_fields: Fields extracted by OCR
-        llm_fields: Fields extracted by LLM
-        has_llm: Whether LLM results are available
-
-    Returns:
-        Tuple of (final_fields, diffs_list)
-    """
-    final_fields = {}
-    diffs = []
-
-    for field_name in COMPARABLE_FIELDS:
-        ocr_value = _normalize_value(ocr_fields.get(field_name))
-        llm_value = _normalize_value(llm_fields.get(field_name)) if has_llm else None
-
-        # Determine final value and whether review is needed
-        if not has_llm:
-            # No LLM available, use OCR value directly
-            final_value = ocr_value
-            source = 'ocr'
-            needs_review = False
-        elif _values_are_equal(field_name, ocr_value, llm_value):
-            # Values match (including numeric equivalence like 330.00 == 330)
-            final_value = ocr_value or llm_value
-            source = 'matched'
-            needs_review = False
-        elif ocr_value and llm_value:
-            # Both have values but they differ. Prefill the LLM value: it reads
-            # the invoice image directly, so it is the better guess of the two.
-            # Still flagged for review, and ParsingDiff keeps both readings so a
-            # reviewer confirms rather than retypes.
-            final_value = llm_value
-            source = 'conflict'
-            needs_review = True
-        elif llm_value and not ocr_value:
-            # LLM found something OCR missed - prefer LLM
-            final_value = llm_value
-            source = 'llm'
-            needs_review = False
-        else:
-            # OCR found something LLM missed - prefer OCR
-            final_value = ocr_value
-            source = 'ocr'
-            needs_review = False
-
-        final_fields[field_name] = final_value
-
-        # Record diff if there's a discrepancy or both have values
-        if has_llm and (ocr_value or llm_value):
-            diffs.append({
-                'field_name': field_name,
-                'ocr_value': ocr_value,
-                'llm_value': llm_value,
-                'final_value': final_value,
-                'source': source,
-                'needs_review': needs_review,
-            })
-
-    return final_fields, diffs
-
-
-def _normalize_value(value: Any) -> Optional[str]:
-    """Normalize a value to string for comparison."""
-    if value is None:
-        return None
-    value_str = str(value).strip()
-    if not value_str:
-        return None
-    return value_str
-
-
-# Fields that should be compared as numbers
-NUMERIC_FIELDS = ['total_with_tax', 'amount', 'tax_amount']
-
-
-def _values_are_equal(field_name: str, value1: Optional[str], value2: Optional[str]) -> bool:
-    """Compare two values, using numeric comparison for numeric fields.
-
-    Args:
-        field_name: Name of the field being compared
-        value1: First value (normalized string)
-        value2: Second value (normalized string)
-
-    Returns:
-        True if values are considered equal
-    """
-    # If both are None or empty, they're equal
-    if not value1 and not value2:
-        return True
-
-    # If only one is None/empty, they're not equal
-    if not value1 or not value2:
-        return False
-
-    # For numeric fields, compare as numbers
-    if field_name in NUMERIC_FIELDS:
-        try:
-            from decimal import Decimal, InvalidOperation
-            # Remove any currency symbols and whitespace
-            clean1 = value1.replace('¥', '').replace('￥', '').replace(',', '').strip()
-            clean2 = value2.replace('¥', '').replace('￥', '').replace(',', '').strip()
-            num1 = Decimal(clean1)
-            num2 = Decimal(clean2)
-            return num1 == num2
-        except (InvalidOperation, ValueError):
-            # Fall back to string comparison if not valid numbers
-            pass
-
-    # Default to string comparison
-    return value1 == value2
+# v6 已移除 _compare_and_resolve（两路仲裁），改用 fusion.fuse() 三路融合。
 
 
 def _update_invoice_from_fields(invoice: Invoice, fields: dict) -> None:
     """Update invoice fields from extracted data."""
     from datetime import datetime
     from decimal import Decimal
+
+    # 列宽 20。超长的代码一定是识别错了，跳过而不是让整次入库因为 flush 失败而回滚
+    if fields.get('invoice_code') and len(fields['invoice_code']) <= 20:
+        invoice.invoice_code = fields['invoice_code']
 
     if fields.get('invoice_number'):
         invoice.invoice_number = fields['invoice_number']
@@ -461,8 +358,3 @@ def _update_invoice_from_fields(invoice: Invoice, fields: dict) -> None:
 
     if fields.get('tax_rate'):
         invoice.tax_rate = fields['tax_rate']
-
-
-def check_llm_available() -> bool:
-    """Check if LLM service is available."""
-    return get_llm_service().is_available

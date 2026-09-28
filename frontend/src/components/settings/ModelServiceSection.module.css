@@ -1,0 +1,57 @@
+.notice {
+  margin-bottom: var(--spacing-xl);
+}
+
+.providerOption {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.providerOption :global(.ant-tag) {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: 18px;
+}
+
+.sourceTag {
+  font-size: 10px;
+  margin: 0;
+}
+
+.visionIcon {
+  color: var(--info);
+}
+
+.advancedToggle {
+  padding: 0;
+  height: auto;
+  color: var(--muted-foreground);
+  font-size: var(--font-size-sm);
+}
+
+.advancedToggle:hover {
+  color: var(--foreground) !important;
+}
+
+.advancedToggle :global(.anticon) {
+  font-size: 10px;
+}
+
+.advanced {
+  margin-top: var(--spacing-base);
+}
+
+.advanced :global(.ant-form-item) {
+  margin-bottom: 0;
+}
+
+.advancedHidden {
+  display: none !important;
+}
+
+.footerActions {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-left: auto;
+}

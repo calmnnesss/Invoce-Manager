@@ -1,8 +1,11 @@
+import hashlib
+import logging
 from typing import Optional, List
 from io import BytesIO
 from datetime import date
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Query, BackgroundTasks, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, StreamingResponse
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from decimal import Decimal
@@ -12,14 +15,116 @@ from app.models.invoice import Invoice, OcrResult, LlmResult, ParsingDiff, Invoi
 from app.schemas.invoice import (
     InvoiceResponse, InvoiceListResponse, InvoiceDetailResponse,
     InvoiceUpdate, BatchUpdateRequest, BatchDeleteRequest, StatisticsResponse, UploadResponse,
-    ResolveDiffRequest
+    FieldUpdateRequest, QrRetryResponse
 )
 from app.config import get_settings
 from app.services.audit_service import log_audit_no_commit, get_client_info
+from app.services import app_settings
+from app.services.fusion import AMOUNT_GROUP, PIPELINE_VERSION, SRC_MANUAL
+from app.services.review import (
+    DIFF_FIELDS, REQUIRED_FIELDS, InvalidValue,
+    apply_to_invoice, reconcile_after_edit, resolve_set, restore_auto, revalidate,
+)
+from app.services.validation import VERDICT_REJECTED
 from app.rate_limit import limiter
 
 settings = get_settings()
 router = APIRouter()
+logger = logging.getLogger(__name__)
+
+# 已进入报销流程的发票只读
+LOCKED_STATUSES = {InvoiceStatus.REIMBURSED, InvoiceStatus.NOT_REIMBURSED}
+# 还没有识别结果的发票，没有可以核对的字段
+UNPROCESSED_STATUSES = {InvoiceStatus.UPLOADED, InvoiceStatus.PROCESSING}
+
+# 预览渲染方式变了（DPI、格式）要改这个版本号，否则浏览器会继续用缓存
+PREVIEW_VERSION = "v1"
+
+
+def _require_editable(invoice: Invoice, allow_unprocessed: bool = False) -> None:
+    if invoice.status in LOCKED_STATUSES:
+        raise HTTPException(status_code=409, detail="发票已进入报销流程，不能修改")
+    if not allow_unprocessed and invoice.status in UNPROCESSED_STATUSES:
+        raise HTTPException(status_code=409, detail="发票还没有识别完成，暂时不能修改")
+
+
+def _is_blank(value) -> bool:
+    return value is None or (isinstance(value, str) and not value.strip())
+
+
+async def _get_invoice_or_404(db: AsyncSession, invoice_id: int, for_update: bool = False) -> Invoice:
+    query = select(Invoice).where(Invoice.id == invoice_id)
+    if for_update:
+        # 同一张票的字段操作要串行：每次都会读-改-写 checks / verdict 与派生金额
+        query = query.with_for_update()
+    invoice = (await db.execute(query)).scalar_one_or_none()
+    if not invoice:
+        raise HTTPException(status_code=404, detail="发票不存在")
+    return invoice
+
+
+async def _get_diffs(db: AsyncSession, invoice_id: int) -> List[ParsingDiff]:
+    query = (select(ParsingDiff)
+             .where(ParsingDiff.invoice_id == invoice_id)
+             .order_by(ParsingDiff.id))
+    return list((await db.execute(query)).scalars().all())
+
+
+def _refresh_verdict(invoice: Invoice, diffs: List[ParsingDiff]) -> None:
+    """人工改动后按当前字段值重校验，回写 checks / verdict。
+
+    v6 之前的旧票没有置信信息，规则口径也不同，保持原样。
+    """
+    if invoice.pipeline_version != PIPELINE_VERSION or not diffs:
+        return
+    cfg = app_settings.current()
+    checks, verdict = revalidate(diffs, invoice.nulled or [], cfg.entities, cfg.amount_rules)
+    invoice.checks = [c.as_dict() for c in checks]
+    invoice.verdict = verdict
+
+
+async def _build_detail(db: AsyncSession, invoice: Invoice) -> InvoiceDetailResponse:
+    ocr = (await db.execute(
+        select(OcrResult).where(OcrResult.invoice_id == invoice.id))).scalar_one_or_none()
+    llm = (await db.execute(
+        select(LlmResult).where(LlmResult.invoice_id == invoice.id))).scalar_one_or_none()
+    diffs = await _get_diffs(db, invoice.id)
+
+    # Build response dict from invoice to avoid lazy loading issues
+    invoice_dict = {
+        "id": invoice.id,
+        "file_name": invoice.file_name,
+        "file_type": invoice.file_type,
+        "status": invoice.status,
+        "owner": invoice.owner,
+        "verdict": invoice.verdict,
+        "checks": invoice.checks,
+        "degraded": invoice.degraded,
+        "nulled": invoice.nulled,
+        "pipeline_version": invoice.pipeline_version,
+        "invoice_code": invoice.invoice_code,
+        "invoice_number": invoice.invoice_number,
+        "issue_date": invoice.issue_date,
+        "buyer_name": invoice.buyer_name,
+        "buyer_tax_id": invoice.buyer_tax_id,
+        "seller_name": invoice.seller_name,
+        "seller_tax_id": invoice.seller_tax_id,
+        "item_name": invoice.item_name,
+        "total_with_tax": invoice.total_with_tax,
+        "specification": invoice.specification,
+        "unit": invoice.unit,
+        "quantity": invoice.quantity,
+        "unit_price": invoice.unit_price,
+        "amount": invoice.amount,
+        "tax_rate": invoice.tax_rate,
+        "tax_amount": invoice.tax_amount,
+        "created_at": invoice.created_at,
+        "updated_at": invoice.updated_at,
+        "ocr_result": ocr,
+        "llm_result": llm,
+        "parsing_diffs": diffs,
+    }
+    return InvoiceDetailResponse.model_validate(invoice_dict)
 
 
 def _parse_invoice_ids(invoice_ids: Optional[str]) -> Optional[List[int]]:
@@ -309,56 +414,77 @@ async def get_invoice(
     db: AsyncSession = Depends(get_db)
 ):
     """获取发票详情"""
-    query = select(Invoice).where(Invoice.id == invoice_id)
-    result = await db.execute(query)
-    invoice = result.scalar_one_or_none()
+    invoice = await _get_invoice_or_404(db, invoice_id)
+    return await _build_detail(db, invoice)
 
-    if not invoice:
-        raise HTTPException(status_code=404, detail="发票不存在")
 
-    # Load related data
-    ocr_query = select(OcrResult).where(OcrResult.invoice_id == invoice_id)
-    ocr_result = await db.execute(ocr_query)
-    ocr = ocr_result.scalar_one_or_none()
+@router.post("/{invoice_id}/retry-qr", response_model=QrRetryResponse)
+async def retry_qr(
+    invoice_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    """手动触发二维码解码，并用解出的字段覆盖对应项。
 
-    llm_query = select(LlmResult).where(LlmResult.invoice_id == invoice_id)
-    llm_result = await db.execute(llm_query)
-    llm = llm_result.scalar_one_or_none()
+    二维码线路不进默认链路：它在当前测试集上 51/51 解码失败
+    （zbar 与 cv2 两个解码器、四档缩放、灰度变体全试过）。做成手动按钮，
+    避免每张票都白跑一次；解出来时它是确定性来源，优先级高于任何模型。
+    """
+    invoice = await _get_invoice_or_404(db, invoice_id, for_update=True)
+    _require_editable(invoice)
 
-    diff_query = select(ParsingDiff).where(ParsingDiff.invoice_id == invoice_id)
-    diff_result = await db.execute(diff_query)
-    diffs = diff_result.scalars().all()
+    from app.services.qr_service import decode_invoice_qr
 
-    # Build response dict from invoice to avoid lazy loading issues
-    invoice_dict = {
-        "id": invoice.id,
-        "file_name": invoice.file_name,
-        "file_type": invoice.file_type,
-        "status": invoice.status,
-        "owner": invoice.owner,
-        "invoice_number": invoice.invoice_number,
-        "issue_date": invoice.issue_date,
-        "buyer_name": invoice.buyer_name,
-        "buyer_tax_id": invoice.buyer_tax_id,
-        "seller_name": invoice.seller_name,
-        "seller_tax_id": invoice.seller_tax_id,
-        "item_name": invoice.item_name,
-        "total_with_tax": invoice.total_with_tax,
-        "specification": invoice.specification,
-        "unit": invoice.unit,
-        "quantity": invoice.quantity,
-        "unit_price": invoice.unit_price,
-        "amount": invoice.amount,
-        "tax_rate": invoice.tax_rate,
-        "tax_amount": invoice.tax_amount,
-        "created_at": invoice.created_at,
-        "updated_at": invoice.updated_at,
-        "ocr_result": ocr,
-        "llm_result": llm,
-        "parsing_diffs": list(diffs),
-    }
+    qr_fields = await run_in_threadpool(decode_invoice_qr, invoice.file_data)
 
-    return InvoiceDetailResponse.model_validate(invoice_dict)
+    if not qr_fields:
+        return QrRetryResponse(
+            invoice_id=invoice_id, decoded=False, fields={},
+            message="未能从图像中解出二维码",
+        )
+
+    # 二维码是确定性来源，直接覆盖并把对应行标为已确认。人填写过的字段不覆盖。
+    diffs = await _get_diffs(db, invoice_id)
+    by_name = {d.field_name: d for d in diffs}
+
+    applied = {}
+    changed = False
+    for fname, value in qr_fields.items():
+        if value is None:
+            continue
+        d = by_name.get(fname)
+        if d is not None and d.source == SRC_MANUAL:
+            continue
+        try:
+            # 按列类型转换后再写：日期、金额列不能直接塞字符串
+            apply_to_invoice(invoice, fname, value)
+        except InvalidValue:
+            continue
+        applied[fname] = value
+        if d:
+            changed = changed or d.final_value != value
+            d.qr_value = value
+            d.final_value = value
+            d.source = "qr"
+            d.confidence = "certain"
+            d.note = "二维码解出（手动重试）"
+            d.resolved = 1
+
+    # 金额被二维码改写：整组按三层规则重判（二维码的值不会被改写）
+    if "amount" in applied:
+        for fname in reconcile_after_edit(by_name, "amount", app_settings.current().amount_rules):
+            apply_to_invoice(invoice, fname, by_name[fname].final_value)
+
+    remaining = [f for f in (invoice.degraded or []) if f not in applied]
+    invoice.degraded = remaining
+    _refresh_verdict(invoice, diffs)
+    if changed and invoice.status == InvoiceStatus.CONFIRMED:
+        invoice.status = InvoiceStatus.REVIEWING
+    await db.commit()
+
+    return QrRetryResponse(
+        invoice_id=invoice_id, decoded=True, fields=applied,
+        message=f"解码成功，已覆盖 {len(applied)} 个字段",
+    )
 
 
 @router.get("/{invoice_id}/file")
@@ -391,6 +517,39 @@ async def get_invoice_file(
         content=invoice.file_data,
         media_type=content_type_map.get(invoice.file_type, "application/octet-stream"),
         headers={"Content-Disposition": f"attachment; filename*=UTF-8''{encoded_filename}"}
+    )
+
+
+@router.get("/{invoice_id}/preview")
+async def get_invoice_preview(
+    invoice_id: int,
+    request: Request,
+    db: AsyncSession = Depends(get_db)
+):
+    """原件预览：图片按 EXIF 转正、PDF 渲染首页，统一为 JPEG，供详情页查看器使用。
+
+    /file 返回的是原文件且带 attachment，放进 iframe / img 会触发下载而不是显示。
+    """
+    invoice = await _get_invoice_or_404(db, invoice_id)
+
+    # 原件入库后不会变，按内容做 ETag，重复打开同一张票不必重新渲染
+    etag = f'"{PREVIEW_VERSION}-{hashlib.sha1(invoice.file_data).hexdigest()}"'
+    headers = {"ETag": etag, "Cache-Control": "private, max-age=86400"}
+    if request.headers.get("if-none-match") == etag:
+        return Response(status_code=304, headers=headers)
+
+    from app.services.preview_service import render_preview
+
+    try:
+        content = await run_in_threadpool(render_preview, invoice.file_data, invoice.file_type)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("Invoice %s preview failed: %s: %s", invoice_id, type(e).__name__, e)
+        raise HTTPException(status_code=500, detail="原件预览生成失败")
+
+    return Response(
+        content=content,
+        media_type="image/jpeg",
+        headers={**headers, "Content-Disposition": "inline"},
     )
 
 
@@ -620,12 +779,9 @@ async def process_invoice(
     """处理发票：运行OCR解析"""
     from app.services.invoice_service import process_invoice as do_process
 
-    query = select(Invoice).where(Invoice.id == invoice_id)
-    result = await db.execute(query)
-    invoice = result.scalar_one_or_none()
-
-    if not invoice:
-        raise HTTPException(status_code=404, detail="发票不存在")
+    invoice = await _get_invoice_or_404(db, invoice_id)
+    # 已上传 / 解析中的票也允许手动（重新）识别：后台任务可能已经失败或随进程重启丢失
+    _require_editable(invoice, allow_unprocessed=True)
 
     success = await do_process(invoice_id, db)
 
@@ -667,98 +823,101 @@ async def delete_invoice(
     return {"message": "删除成功"}
 
 
-@router.post("/{invoice_id}/diffs/{diff_id}/resolve")
-async def resolve_diff(
+@router.patch("/{invoice_id}/fields/{field_name}", response_model=InvoiceDetailResponse)
+async def update_invoice_field(
     invoice_id: int,
-    diff_id: int,
-    resolve_request: ResolveDiffRequest,
+    field_name: str,
+    body: FieldUpdateRequest,
     request: Request,
     db: AsyncSession = Depends(get_db)
 ):
-    """解决解析差异，选择OCR、LLM或自定义值"""
-    from datetime import datetime
-    from decimal import Decimal as Dec
+    """详情页对单个字段的确认或修改。
 
-    # Get the diff
-    diff_query = select(ParsingDiff).where(
-        ParsingDiff.id == diff_id,
-        ParsingDiff.invoice_id == invoice_id
-    )
-    diff_result = await db.execute(diff_query)
-    diff = diff_result.scalar_one_or_none()
-
-    if not diff:
-        raise HTTPException(status_code=404, detail="差异记录不存在")
-
-    # Capture old value for audit
-    old_diff_value = {
-        "field_name": diff.field_name,
-        "final_value": diff.final_value,
-        "source": diff.source,
-        "resolved": diff.resolved,
-    }
-
-    # Determine the final value
-    if resolve_request.source == 'ocr':
-        final_value = diff.ocr_value
-    elif resolve_request.source == 'llm':
-        final_value = diff.llm_value
-    elif resolve_request.source == 'custom':
-        final_value = resolve_request.custom_value
-    else:
-        raise HTTPException(status_code=400, detail="无效的来源类型")
-
-    # Update the diff
-    diff.final_value = final_value
-    diff.source = resolve_request.source
-    diff.resolved = 1
-
-    # Get the invoice and update the corresponding field
-    invoice_query = select(Invoice).where(Invoice.id == invoice_id)
-    invoice_result = await db.execute(invoice_query)
-    invoice = invoice_result.scalar_one_or_none()
-
-    if not invoice:
-        raise HTTPException(status_code=404, detail="发票不存在")
-
-    # Update the invoice field based on field_name
-    field_name = diff.field_name
-    if final_value is not None:
-        if field_name == 'issue_date':
-            try:
-                invoice.issue_date = datetime.strptime(final_value, '%Y-%m-%d').date()
-            except ValueError:
-                pass
-        elif field_name in ['total_with_tax', 'amount', 'tax_amount', 'quantity', 'unit_price']:
-            try:
-                setattr(invoice, field_name, Dec(final_value))
-            except (ValueError, TypeError):
-                pass
-        else:
-            setattr(invoice, field_name, final_value)
-
-    # Check if all diffs are resolved
-    all_diffs_query = select(ParsingDiff).where(ParsingDiff.invoice_id == invoice_id)
-    all_diffs_result = await db.execute(all_diffs_query)
-    all_diffs = all_diffs_result.scalars().all()
-
-    all_resolved = all(d.resolved == 1 for d in all_diffs)
-    if all_resolved:
-        invoice.status = InvoiceStatus.CONFIRMED
-
-    # Audit log for diff resolution
+    所有字段操作都走这里（选中某个候选值也是 set）：写 ParsingDiff 行的同时写
+    invoices 列，金额组（金额、税率、税额、价税合计）任一项被确认或修改后整组重判，
+    最后按当前值重校验。
+    返回完整详情，前端直接替换状态，不必再请求一次。
+    """
+    invoice = await _get_invoice_or_404(db, invoice_id, for_update=True)
+    _require_editable(invoice)
     client_info = get_client_info(request)
+
+    if field_name == "owner":
+        # 归属人不是识别结果，没有 ParsingDiff 行：只写列，不参与校验，也不影响状态
+        if body.action != "set":
+            raise HTTPException(status_code=400, detail="归属人只支持修改")
+        value = (body.value or "").strip() or None
+        if value and len(value) > 100:
+            raise HTTPException(status_code=400, detail="内容过长，最多 100 个字符")
+        old_owner = invoice.owner
+        invoice.owner = value
+        await log_audit_no_commit(
+            db=db,
+            entity_type="invoice",
+            entity_id=invoice_id,
+            action="field_update",
+            old_value={"field_name": "owner", "value": old_owner},
+            new_value={"field_name": "owner", "value": value},
+            ip_address=client_info.get("ip_address"),
+            user_agent=client_info.get("user_agent"),
+        )
+        await db.commit()
+        return await _build_detail(db, invoice)
+
+    if field_name not in DIFF_FIELDS:
+        raise HTTPException(status_code=404, detail="不支持修改该字段")
+    diffs = await _get_diffs(db, invoice_id)
+    by_name = {d.field_name: d for d in diffs}
+    row = by_name.get(field_name)
+    if row is None:
+        raise HTTPException(status_code=404, detail="这张发票没有该字段的识别结果")
+
+    before = {"final_value": row.final_value, "source": row.source, "resolved": row.resolved}
+    touched: List[str] = []
+    rules = app_settings.current().amount_rules
+    try:
+        if body.action == "confirm":
+            if row.final_value is None and field_name in REQUIRED_FIELDS:
+                raise InvalidValue("这一项必填，请先填写")
+            row.resolved = 1
+        elif body.action == "set":
+            value, source, same = resolve_set(row, body.value)
+            if not same:
+                # 先写列：类型转换失败时 diff 行还没被改动
+                apply_to_invoice(invoice, field_name, value)
+                row.final_value = value
+                row.source = source
+                row.note = "人工填写"
+                touched.append(field_name)
+            row.resolved = 1
+        else:  # auto：金额组某一项交还给公式，按其余三项推导
+            touched = restore_auto(by_name, field_name, rules)
+        if body.action != "auto" and field_name in AMOUNT_GROUP:
+            touched += [f for f in reconcile_after_edit(by_name, field_name, rules)
+                        if f not in touched]
+        for fname in touched:
+            apply_to_invoice(invoice, fname, by_name[fname].final_value)
+    except InvalidValue as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    _refresh_verdict(invoice, diffs)
+    if touched and invoice.status == InvoiceStatus.CONFIRMED:
+        # 改了已确认发票的值，要重新确认
+        invoice.status = InvoiceStatus.REVIEWING
+
     await log_audit_no_commit(
         db=db,
         entity_type="parsing_diff",
-        entity_id=diff_id,
-        action="resolve",
-        old_value=old_diff_value,
+        entity_id=row.id,
+        action="field_update",
+        old_value={"field_name": field_name, **before},
         new_value={
             "field_name": field_name,
-            "final_value": final_value,
-            "source": resolve_request.source,
-            "resolved": 1,
+            "action": body.action,
+            "final_value": row.final_value,
+            "source": row.source,
+            "resolved": row.resolved,
+            "recomputed": [f for f in touched if f != field_name],
             "invoice_id": invoice_id,
         },
         ip_address=client_info.get("ip_address"),
@@ -766,13 +925,7 @@ async def resolve_diff(
     )
 
     await db.commit()
-
-    return {
-        "message": "差异已解决",
-        "field_name": field_name,
-        "final_value": final_value,
-        "all_resolved": all_resolved
-    }
+    return await _build_detail(db, invoice)
 
 
 @router.post("/{invoice_id}/confirm")
@@ -781,26 +934,11 @@ async def confirm_invoice(
     request: Request,
     db: AsyncSession = Depends(get_db)
 ):
-    """确认发票，标记所有差异为已解决。"""
-    # Get invoice
-    invoice_query = select(Invoice).where(Invoice.id == invoice_id)
-    invoice_result = await db.execute(invoice_query)
-    invoice = invoice_result.scalar_one_or_none()
+    """确认发票。还没核对的字段按当前结果一并确认（前端确认前会列出这些字段）。"""
+    invoice = await _get_invoice_or_404(db, invoice_id, for_update=True)
+    _require_editable(invoice)
 
-    if not invoice:
-        raise HTTPException(status_code=404, detail="发票不存在")
-
-    critical_fields = [
-        "invoice_number",
-        "issue_date",
-        "total_with_tax",
-        "buyer_name",
-        "buyer_tax_id",
-        "seller_name",
-        "seller_tax_id",
-        "item_name",
-    ]
-    missing_fields = [field for field in critical_fields if not getattr(invoice, field)]
+    missing_fields = [field for field in REQUIRED_FIELDS if _is_blank(getattr(invoice, field))]
     if missing_fields:
         raise HTTPException(
             status_code=400,
@@ -813,10 +951,7 @@ async def confirm_invoice(
     llm = llm_result.scalar_one_or_none()
     has_llm = llm is not None
 
-    # Get parsing diffs to verify comparison exists
-    diffs_query = select(ParsingDiff).where(ParsingDiff.invoice_id == invoice_id)
-    diffs_result = await db.execute(diffs_query)
-    diffs = diffs_result.scalars().all()
+    diffs = await _get_diffs(db, invoice_id)
 
     if has_llm and not diffs:
         raise HTTPException(
@@ -824,13 +959,20 @@ async def confirm_invoice(
             detail="无法确认：缺少OCR和LLM的比对结果。请重新解析发票。"
         )
 
-    # Mark all diffs as resolved
+    # 销售方与本公司主体相同是硬矛盾，不能靠「一并确认」带过去
+    _refresh_verdict(invoice, diffs)
+    if invoice.pipeline_version == PIPELINE_VERSION and invoice.verdict == VERDICT_REJECTED:
+        raise HTTPException(
+            status_code=400,
+            detail="无法确认：销售方与本公司主体相同，请核对销售方后再确认。"
+        )
+
+    # 其余未核对的字段按当前结果一并确认。不再用某一路识别值去补空值——
+    # 那会把被 seller_is_entity 置空的值又填回去。
+    auto_accepted = [d.field_name for d in diffs if not d.resolved]
     for diff in diffs:
-        if diff.resolved == 0:
-            # Use existing final_value or ocr_value as default
-            if not diff.final_value:
-                diff.final_value = diff.ocr_value or diff.llm_value
-            diff.resolved = 1
+        diff.resolved = 1
+    _refresh_verdict(invoice, diffs)
 
     # Update invoice status
     old_status = invoice.status.value if invoice.status else None
@@ -847,6 +989,7 @@ async def confirm_invoice(
         new_value={
             "status": InvoiceStatus.CONFIRMED.value,
             "resolved_diffs": len(diffs),
+            "auto_accepted": auto_accepted,
             "source": "llm" if has_llm else "ocr",
         },
         ip_address=client_info.get("ip_address"),

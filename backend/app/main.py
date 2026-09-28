@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from slowapi.errors import RateLimitExceeded
 
 from app.config import get_settings
-from app.routers import health, invoices, settings as settings_router
+from app.routers import health, invoices, review_settings, settings as settings_router
 from app.rate_limit import limiter
 
 settings = get_settings()
@@ -39,13 +39,18 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api", tags=["Health"])
 app.include_router(invoices.router, prefix="/api/invoices", tags=["Invoices"])
 app.include_router(settings_router.router, prefix="/api/settings", tags=["Settings"])
+app.include_router(review_settings.router, prefix="/api/settings", tags=["Settings"])
 
 
 @app.on_event("startup")
 async def startup():
-    from app.database import engine, Base
+    from app.database import engine, Base, async_session_maker
+    from app.services import app_settings
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    # 设置页保存的业务配置（主体清单、金额规则）载入内存，识别与核对都读这份快照
+    async with async_session_maker() as db:
+        await app_settings.load(db)
 
 
 @app.get("/")

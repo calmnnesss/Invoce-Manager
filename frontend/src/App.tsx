@@ -3,12 +3,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UploadPage from './pages/UploadPage';
 import InvoiceListPage from './pages/InvoiceListPage';
 import InvoiceDetailPage from './pages/InvoiceDetailPage';
-import LLMConfigModal from './components/LLMConfigModal';
+import SettingsPage from './pages/SettingsPage';
 import { MainLayout } from './components/layout';
 import { getLLMStatus } from './services/api';
 
 function AppContent() {
-  const [llmConfigOpen, setLlmConfigOpen] = useState(false);
   const [llmConfigured, setLlmConfigured] = useState<boolean | null>(null);
   const [showLlmPromo, setShowLlmPromo] = useState(false);
 
@@ -41,20 +40,14 @@ function AppContent() {
     <MainLayout
       llmConfigured={llmConfigured}
       showLlmPromo={showLlmPromo}
-      onOpenLLMConfig={() => setLlmConfigOpen(true)}
       onCloseLLMPromo={() => setShowLlmPromo(false)}
     >
       <Routes>
         <Route path="/" element={<InvoiceListPage />} />
         <Route path="/upload" element={<UploadPage />} />
+        <Route path="/settings" element={<SettingsPage onLLMConfigured={handleLLMConfigured} />} />
         <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
       </Routes>
-
-      <LLMConfigModal
-        open={llmConfigOpen}
-        onClose={() => setLlmConfigOpen(false)}
-        onConfigured={handleLLMConfigured}
-      />
     </MainLayout>
   );
 }

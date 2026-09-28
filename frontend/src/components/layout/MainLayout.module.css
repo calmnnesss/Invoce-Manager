@@ -20,9 +20,35 @@
   padding: var(--content-padding-y) var(--content-padding-x);
 }
 
+/* 全高工作台（发票核对页）：主区域固定为视口高度，由页面内部各自滚动 */
+.mainFullBleed {
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contentWrapper.fullBleed {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+}
+
+@media (max-width: 1100px) {
+  .mainFullBleed {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+}
+
 /* LLM Promo Alert */
 .llmPromoAlert {
   margin-bottom: var(--spacing-xl);
+}
+
+.llmPromoBanner {
+  flex-shrink: 0;
 }
 
 /* Footer */

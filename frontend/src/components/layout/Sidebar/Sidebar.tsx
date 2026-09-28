@@ -13,16 +13,25 @@ interface NavItem {
 
 interface SidebarProps {
   llmConfigured: boolean | null;
-  onOpenLLMConfig: () => void;
 }
+
+const SETTINGS_PATH = '/settings';
 
 const navItems: NavItem[] = [
   { path: '/', label: '发票列表' },
   { path: '/upload', label: '上传发票' },
+  { path: SETTINGS_PATH, label: '设置' },
 ];
 
-export default function Sidebar({ llmConfigured, onOpenLLMConfig }: SidebarProps) {
+export default function Sidebar({ llmConfigured }: SidebarProps) {
   const location = useLocation();
+
+  // 设置项后面带模型服务的配置状态
+  const settingsStatus = llmConfigured === false ? (
+    <ExclamationCircleOutlined style={{ marginLeft: 8, color: 'var(--warning)', fontSize: 12 }} />
+  ) : llmConfigured === true ? (
+    <CheckCircleOutlined style={{ marginLeft: 8, color: 'var(--success)', fontSize: 12 }} />
+  ) : null;
 
   return (
     <aside className={styles.sidebar}>
@@ -38,41 +47,31 @@ export default function Sidebar({ llmConfigured, onOpenLLMConfig }: SidebarProps
         <nav className={styles.navigation}>
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
-            return (
+            const isSettings = item.path === SETTINGS_PATH;
+            const link = (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                aria-current={isActive ? 'page' : undefined}
               >
                 <span className={styles.navDot} />
-                <span className={styles.navLabel}>{item.label}</span>
+                <span className={styles.navLabel}>
+                  {item.label}
+                  {isSettings && settingsStatus}
+                </span>
               </Link>
             );
+            return isSettings && llmConfigured !== null ? (
+              <Tooltip
+                key={item.path}
+                title={llmConfigured ? '模型服务已配置' : '模型服务未配置，点击前往设置'}
+                placement="right"
+              >
+                {link}
+              </Tooltip>
+            ) : link;
           })}
-
-          {/* Settings (LLM Config) - appears as nav item */}
-          <Tooltip title={llmConfigured ? 'LLM服务已配置' : 'LLM服务未配置，点击配置'} placement="right">
-            <button
-              className={styles.navItem}
-              onClick={onOpenLLMConfig}
-              style={{ border: 'none', background: 'none', width: '100%', textAlign: 'left' }}
-            >
-              <span className={styles.navDot} />
-              <span className={styles.navLabel}>
-                设置
-                {llmConfigured === false && (
-                  <ExclamationCircleOutlined
-                    style={{ marginLeft: 8, color: 'var(--warning)', fontSize: 12 }}
-                  />
-                )}
-                {llmConfigured === true && (
-                  <CheckCircleOutlined
-                    style={{ marginLeft: 8, color: 'var(--success)', fontSize: 12 }}
-                  />
-                )}
-              </span>
-            </button>
-          </Tooltip>
         </nav>
       </div>
 

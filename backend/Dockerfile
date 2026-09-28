@@ -2,7 +2,8 @@ FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
-# Install system dependencies for PaddleOCR with retry
+# Install system dependencies with retry
+# (poppler-utils: pdf2image 渲染 PDF，供视觉模型与原件预览使用)
 RUN for i in 1 2 3 4 5; do \
     apt-get update && apt-get install -y --no-install-recommends \
         libgomp1 \

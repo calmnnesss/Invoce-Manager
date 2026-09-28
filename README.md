@@ -12,7 +12,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18.2-61DAFB.svg)](https://reactjs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
-[![PaddleOCR](https://img.shields.io/badge/PaddleOCR-2.7-0052CC.svg)](https://github.com/PaddlePaddle/PaddleOCR)
+![OCR](https://img.shields.io/badge/OCR-qwen3.5--ocr-0052CC.svg)
 
 **[English](#-highlights) | [简体中文](#-亮点)**
 
@@ -31,19 +31,19 @@
 
 - **🔍 Dual-Source Verification** - OCR + LLM double-check every field, conflicts auto-flagged for review
 - **🤖 Multi-LLM Support** - GPT-4o / Claude / Gemini / Qwen / DeepSeek / Zhipu GLM
-- **🇨🇳 Chinese Invoice Optimized** - PaddleOCR + custom prompts for VAT invoices (增值税发票)
+- **🇨🇳 Chinese Invoice Optimized** - qwen3.5-ocr structured extraction + custom prompts for VAT invoices (增值税发票)
 - **⚡ Parallel Processing** - OCR and LLM run simultaneously for faster results
 - **🐳 One-Click Deploy** - Docker Compose, ready in 3 minutes
-- **🔒 Privacy First** - Self-hosted, your data never leaves your server
+- **🔒 Self-Hosted** - Invoice records stay in your own database; invoice images are sent only to the model services you configure
 
 ## ✨ 亮点
 
 - **🔍 双源验证** - OCR + LLM 双重识别，字段冲突自动标记待审核
 - **🤖 多模型支持** - 支持 GPT-4o / Claude / Gemini / 通义千问 / DeepSeek / 智谱GLM
-- **🇨🇳 中文发票优化** - PaddleOCR 深度优化 + 增值税发票专用提示词
+- **🇨🇳 中文发票优化** - qwen3.5-ocr 结构化抽取 + 增值税发票专用提示词
 - **⚡ 并行处理** - OCR 和 LLM 同时运行，识别更快
 - **🐳 一键部署** - Docker Compose 启动，3分钟搞定
-- **🔒 数据安全** - 本地私有部署，数据不离开服务器
+- **🔒 私有部署** - 发票记录存在你自己的数据库；识别时发票图片只发送给你配置的模型服务
 
 ---
 
@@ -153,7 +153,7 @@
 - ✅ 双源验证，准确率显著提升
 - ✅ 完全免费，MIT 开源协议
 - ✅ 全流程管理，从识别到报销
-- ✅ 本地部署，数据完全可控
+- ✅ 私有部署，发票记录完全可控
 
 </td>
 </tr>
@@ -173,8 +173,8 @@
                     │                  │                  │
                     ▼                  │                  ▼
            ┌───────────────┐           │         ┌───────────────┐
-           │   PaddleOCR   │           │         │   LLM Vision  │
-           │   中文OCR识别  │           │         │  GPT-4/Claude │
+           │  qwen3.5-ocr  │           │         │   LLM Vision  │
+           │   通义千问OCR  │           │         │  GPT-4/Claude │
            └───────┬───────┘           │         └───────┬───────┘
                    │                   │                 │
                    │         ┌────────────────┐          │
@@ -240,7 +240,7 @@ docker-compose up -d
 | DeepSeek | DeepSeek-VL | [platform.deepseek.com](https://platform.deepseek.com/) |
 | 智谱 | GLM-4V | [open.bigmodel.cn](https://open.bigmodel.cn/) |
 
-> 💡 **提示**: 即使不配置LLM，系统也能正常运行（仅使用OCR）。配置LLM后可获得双源验证能力。
+> 💡 **提示**: 识别依赖模型服务：文字识别（qwen3.5-ocr）需要通义千问（DashScope）API Key；再配置一个视觉模型即可获得两路交叉核验。
 
 ---
 
@@ -251,7 +251,7 @@ docker-compose up -d
 | 功能 | 描述 |
 |-----|------|
 | 📤 批量上传 | 支持 PDF、JPG、PNG，单次多文件上传 |
-| 🔍 OCR识别 | PaddleOCR 中文优化，300DPI 高清识别 |
+| 🔍 OCR识别 | qwen3.5-ocr 结构化抽取，直接返回发票字段 |
 | 🤖 LLM解析 | Vision 模型直接理解发票图像 |
 | ⚖️ 智能比对 | 自动对比OCR和LLM结果，标记差异 |
 | ✏️ 人工复核 | 冲突字段可视化，一键选择正确值 |
@@ -307,6 +307,16 @@ GET /api/invoices?status=REVIEWING&owner=张三&page=1&page_size=20
 # 获取详情 | Get Detail (includes OCR, LLM, Diff results)
 GET /api/invoices/{id}
 
+# 核对单个字段 | Confirm / edit one field (action: confirm | set | auto)
+PATCH /api/invoices/{id}/fields/{field_name}
+{
+  "action": "set",
+  "value": "2987.18"
+}
+
+# 原件预览（统一为 JPEG）| Original document preview
+GET /api/invoices/{id}/preview
+
 # 更新信息 | Update Invoice
 PUT /api/invoices/{id}
 {
@@ -316,7 +326,7 @@ PUT /api/invoices/{id}
 }
 
 # 重新处理 | Reprocess
-POST /api/invoices/{id}/process?use_ocr=true&use_llm=true
+POST /api/invoices/{id}/process
 
 # 批量操作 | Batch Operations
 POST /api/invoices/batch-update
@@ -365,7 +375,7 @@ POST /api/settings/llm/test
 
 - FastAPI 0.109 (Async REST API)
 - SQLAlchemy 2.0 + asyncpg (Async ORM)
-- PaddleOCR 2.7 (Chinese OCR)
+- qwen3.5-ocr via DashScope (Chinese OCR)
 - Multi-LLM SDK Integration
 
 </td>
@@ -402,7 +412,7 @@ invoice_manager/
 │   │   │   ├── invoices.py    # 发票 CRUD + 处理
 │   │   │   └── settings.py    # LLM 配置
 │   │   ├── services/          # 业务逻辑
-│   │   │   ├── ocr_service.py # PaddleOCR 识别
+│   │   │   ├── qwen_ocr_service.py # qwen3.5-ocr 文字识别
 │   │   │   ├── llm_service.py # 多 LLM 调用
 │   │   │   └── invoice_service.py # 核心处理流程
 │   │   ├── schemas/           # Pydantic 数据验证
@@ -486,7 +496,7 @@ docker-compose up -d db
 <details>
 <summary><b>Q: 不配置LLM可以使用吗？</b></summary>
 
-A: 可以！系统会仅使用 PaddleOCR 进行识别。但配置LLM后可以获得双源验证能力，准确率会显著提升。
+A: 不能自动识别。文字识别（qwen3.5-ocr）同样需要通义千问（DashScope）的 API Key。建议再配置一个视觉模型，两路结果交叉核验，准确率更高。
 </details>
 
 <details>
@@ -513,7 +523,7 @@ A:
 <details>
 <summary><b>Q: 数据安全吗？</b></summary>
 
-A: 系统完全本地部署，发票数据存储在你自己的服务器上。如果使用LLM，发票图片会发送到LLM提供商，请根据实际情况选择。
+A: 系统私有部署，发票记录存储在你自己的数据库里。识别时发票图片会发送给所配置的模型服务（通义千问及其他 LLM 提供商），请根据实际情况选择。
 </details>
 
 ---
@@ -526,7 +536,7 @@ A: 系统完全本地部署，发票数据存储在你自己的服务器上。�
 
 ## 🙏 致谢 | Acknowledgments
 
-- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) - 强大的中文OCR引擎
+- 通义千问 qwen3.5-ocr（阿里云百炼）- 发票结构化识别
 - [FastAPI](https://fastapi.tiangolo.com/) - 现代Python Web框架
 - [Ant Design](https://ant.design/) - 企业级UI组件库
 
@@ -552,7 +562,7 @@ Made with ❤️ for the open source community
 <!--
 发票识别 发票OCR 中文发票 增值税发票 电子发票 发票管理系统 费用报销 财务自动化 票据识别
 Invoice OCR Chinese Invoice VAT Invoice Invoice Recognition Document AI Receipt OCR
-Expense Management Financial Automation PaddleOCR GPT-4 Claude LLM Invoice
+Expense Management Financial Automation Qwen-OCR GPT-4 Claude LLM Invoice
 开源发票 免费发票识别 Python发票 FastAPI React 发票数据提取 批量发票处理
 Invoice Parser Invoice Scanner Invoice Extractor AI Invoice Processing
 -->

@@ -94,26 +94,43 @@ DIAGNOSTIC_FIELDS = ["image_orientation", "party_evidence"]
 # --------------------------------------------------------------------------
 # 报销主体清单（v3 起使用）
 # --------------------------------------------------------------------------
+# 清单可以在设置页修改（存在 app_settings 表里，见 app/services/app_settings.py）。
+# 这个 json 是出厂默认值：数据库里还没有配置时使用，测试与评测脚本也以它为准。
 _ENTITIES_PATH = Path(__file__).resolve().parent / "buyer_entities.json"
 _entities_cfg = json.loads(_ENTITIES_PATH.read_text(encoding="utf-8"))
 
-BUYER_ENTITIES: list[dict] = _entities_cfg["entities"]
-ENTITY_BY_ID: dict[str, dict] = {e["id"]: e for e in BUYER_ENTITIES}
+DEFAULT_BUYER_ENTITIES: list[dict] = _entities_cfg["entities"]
+DEFAULT_ENTITIES_LABEL: str = _entities_cfg.get("version", "unlabeled")
 DEFAULT_ENTITY_ID: str = _entities_cfg.get("default_entity_id", "")
 
-# 主体清单会被渲染进 prompt，改清单等于改 prompt —— 但版本号不会变。
-# 所以这里算一个自动指纹写进日志，让“同一个 v3.1 跡下实际跑的是哪份清单”
-# 可追溯。手写 version 可选，忘了填也有 hash 兵底。
-_entities_blob = json.dumps(BUYER_ENTITIES, sort_keys=True, ensure_ascii=False)
-ENTITIES_HASH: str = hashlib.sha1(_entities_blob.encode("utf-8")).hexdigest()[:8]
-ENTITIES_VERSION: str = (
-    f"{_entities_cfg.get('version', 'unlabeled')}#{ENTITIES_HASH}"
-    f"({len(BUYER_ENTITIES)})"
-)
+# 出厂清单的别名，供测试与评测脚本使用。线上代码读 app_settings.current()，
+# 否则设置页改了清单也不会生效。
+BUYER_ENTITIES: list[dict] = DEFAULT_BUYER_ENTITIES
+ENTITY_BY_ID: dict[str, dict] = {e["id"]: e for e in BUYER_ENTITIES}
 
-_entity_table = "\n".join(
-    f"  {e['id']}    {e['name']}    {e['tax_id']}" for e in BUYER_ENTITIES
-)
+
+def entities_version(entities: list[dict], label: str = DEFAULT_ENTITIES_LABEL) -> str:
+    """主体清单的指纹，写进每条 LLM 日志。
+
+    主体清单会被渲染进 prompt，改清单等于改 prompt —— 但版本号不会变。
+    所以算一个自动指纹，让“同一个 v3.1 下实际跑的是哪份清单”可追溯。
+    """
+    blob = json.dumps(entities, sort_keys=True, ensure_ascii=False)
+    digest = hashlib.sha1(blob.encode("utf-8")).hexdigest()[:8]
+    return f"{label}#{digest}({len(entities)})"
+
+
+ENTITIES_VERSION: str = entities_version(BUYER_ENTITIES)
+
+
+def render_entity_table(entities: list[dict]) -> str:
+    """主体清单在 prompt 里的写法：每行一个主体，id、名称、税号。"""
+    return "\n".join(f"  {e['id']}    {e['name']}    {e['tax_id']}" for e in entities)
+
+
+# prompt 模板里主体清单的占位符。模板在导入时拼好，取用时（get_vision_prompt）
+# 再填入当前清单——清单可以在运行中被设置页修改。
+_ENTITY_TABLE_SLOT = "<<BUYER_ENTITY_TABLE>>"
 
 # Build field descriptions for the prompt
 _field_descriptions = json.dumps(
@@ -301,7 +318,7 @@ INVOICE_VISION_PROMPT_V3 = f"""请从这张中国增值税发票图片中提取�
 
 这张发票的购买方一定是下列主体之一：
 
-{_entity_table}
+{_ENTITY_TABLE_SLOT}
 
 做法：在发票的**购买方信息块**里找到"名称"和"纳税人识别号"两行，
 把读到的内容与上表逐项比对，选出唯一匹配项，返回它的 id。
@@ -424,7 +441,7 @@ INVOICE_VISION_PROMPT_V3_2 = f"""## 第一步：先判断图片方向
 之后描述任何"上/下/左/右"时，一律以**摆正之后**的画面为准。
 ## 第二步：购买方 —— 从清单中选择，不要自由填写
 这张发票的购买方一定是下列主体之一：
-{_entity_table}
+{_ENTITY_TABLE_SLOT}
 做法：在发票的**购买方信息块**里找到"名称"和"纳税人识别号"两行，
 把读到的内容与上表逐项比对，选出可行度最高的选项，并返回它的 id。
 **清单中多项名称高度相似，必须逐字比对，不要凭大致印象选择，并且可以结合名称和纳税人识别号综合判断得到可行度最高的选项。**
@@ -486,11 +503,18 @@ def resolve_prompt_version(version: str | None) -> str:
     return v if v in PROMPT_VERSIONS else DEFAULT_PROMPT_VERSION
 
 
-def get_vision_prompt(version: str | None = None) -> tuple[str, str, str]:
-    """返回 (system_prompt, user_prompt, resolved_version)。"""
+def get_vision_prompt(version: str | None = None,
+                      entities: list[dict] | None = None) -> tuple[str, str, str]:
+    """返回 (system_prompt, user_prompt, resolved_version)。
+
+    entities 是当前的购买方主体清单（设置页可改），渲染进 v3 起的 prompt；
+    不传则用出厂清单。v1 / v2 不含主体清单，不受影响。
+    """
     resolved = resolve_prompt_version(version)
-    return INVOICE_VISION_SYSTEM_PROMPT, PROMPT_VERSIONS[resolved], resolved
+    table = render_entity_table(DEFAULT_BUYER_ENTITIES if entities is None else entities)
+    user_prompt = PROMPT_VERSIONS[resolved].replace(_ENTITY_TABLE_SLOT, table)
+    return INVOICE_VISION_SYSTEM_PROMPT, user_prompt, resolved
 
 
-# 向后兼容：老代码里直接 import INVOICE_VISION_PROMPT 的地方仍然可用
-INVOICE_VISION_PROMPT = PROMPT_VERSIONS[DEFAULT_PROMPT_VERSION]
+# 向后兼容：老代码里直接 import INVOICE_VISION_PROMPT 的地方仍然可用（出厂清单）
+INVOICE_VISION_PROMPT = get_vision_prompt(DEFAULT_PROMPT_VERSION)[1]

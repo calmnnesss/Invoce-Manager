@@ -1,0 +1,404 @@
+/* ---------------- 紧凑行 ---------------- */
+.row {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--spacing-md);
+  padding: 9px var(--spacing-md);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: background-color var(--transition-fast);
+}
+
+.row:hover {
+  background: var(--surface);
+}
+
+.row.focused,
+.row:focus-visible {
+  background: var(--surface);
+  box-shadow: inset 2px 0 0 var(--foreground);
+}
+
+.rowAttention {
+  background: #FFFDF5;
+}
+
+.rowEditing {
+  background: var(--surface);
+}
+
+.label {
+  padding-top: 1px;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+
+.body {
+  min-width: 0;
+}
+
+.valueLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px var(--spacing-sm);
+}
+
+.value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+  border-radius: var(--radius-sm);
+}
+
+.valueEmpty {
+  font-weight: var(--font-weight-normal);
+  color: var(--gray-400);
+}
+
+.recomputed {
+  font-size: var(--font-size-xs);
+  color: var(--info-dark);
+  animation: fadeInOut 2.4s ease forwards;
+}
+
+.flash {
+  animation: flash 1.6s ease;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  cursor: default;
+}
+
+.badgeAuto {
+  color: var(--muted-foreground);
+}
+
+.badgeAuto :global(.anticon) {
+  color: var(--gray-400);
+}
+
+.badgeConfirmed {
+  color: var(--success-dark);
+}
+
+.badgeEdited {
+  color: var(--info-dark);
+}
+
+.badgeAttention {
+  color: var(--warning-dark);
+}
+
+.editBtn {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.row:hover .editBtn,
+.row.focused .editBtn,
+.row:focus-within .editBtn {
+  opacity: 1;
+}
+
+.editBtnVisible {
+  opacity: 1;
+}
+
+.issues {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.issues li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-size: var(--font-size-xs);
+  line-height: 1.6;
+  color: var(--warning-dark);
+}
+
+.issueIcon {
+  font-size: 11px;
+}
+
+/* ---------------- 编辑框 ---------------- */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: 2px;
+}
+
+.quickPicks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.quickPick {
+  padding: 1px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--background);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+}
+
+.quickPick:hover:not(:disabled) {
+  border-color: var(--foreground);
+}
+
+.error {
+  font-size: var(--font-size-xs);
+  color: var(--error-dark);
+}
+
+.editorActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+.kbd {
+  display: inline-block;
+  min-width: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-sm);
+  background: var(--background);
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.kbdOnDark {
+  margin-left: 2px;
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* ---------------- 展开卡片 ---------------- */
+.card {
+  margin: 6px 0;
+  padding: var(--spacing-md) var(--spacing-base);
+  border: 1px solid #FDE68A;
+  border-left: 3px solid var(--warning);
+  border-radius: var(--radius-md);
+  background: #FFFDF5;
+  outline: none;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+  animation: cardIn 240ms ease;
+}
+
+.cardBlocked {
+  border-color: #FECACA;
+  border-left-color: var(--error);
+  background: #FFFAFA;
+}
+
+.cardFocused,
+.card:focus-visible {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.cardBlocked.cardFocused,
+.cardBlocked:focus-visible {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+}
+
+.cardLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--foreground);
+}
+
+.chip {
+  padding: 1px 8px;
+  border-radius: var(--radius-full);
+  background: #FEF3C7;
+  font-size: 11px;
+  color: var(--warning-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.chipBlocked {
+  background: #FEE2E2;
+  color: var(--error-dark);
+}
+
+.reason {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+  line-height: 1.55;
+}
+
+.reason :global(.anticon) {
+  font-size: 12px;
+}
+
+.cardValue {
+  margin-top: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+  color: var(--foreground);
+  border-radius: var(--radius-sm);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: var(--spacing-sm);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--background);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  text-align: left;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--gray-400);
+}
+
+.optionSelected {
+  border-color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
+
+.optionExcluded {
+  cursor: not-allowed;
+  color: var(--gray-400);
+  background: var(--surface);
+}
+
+.optionExcluded .optionText {
+  text-decoration: line-through;
+}
+
+.optionManual {
+  color: var(--muted-foreground);
+  border-style: dashed;
+}
+
+.optionText {
+  flex: 1;
+  min-width: 0;
+  word-break: break-all;
+}
+
+.diff {
+  padding: 0 1px;
+  border-radius: 2px;
+  background: #FDE68A;
+  color: #78350F;
+  font-weight: var(--font-weight-semibold);
+}
+
+.optionExcluded .diff {
+  background: none;
+  color: inherit;
+}
+
+.recommend {
+  flex-shrink: 0;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--foreground);
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--background);
+}
+
+.excludedNote {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--error-dark);
+}
+
+.evidence {
+  margin-top: 6px;
+  font-size: var(--font-size-xs);
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+@keyframes flash {
+  0% { background-color: #DBEAFE; }
+  100% { background-color: transparent; }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .flash,
+  .recomputed {
+    animation: none;
+  }
+}

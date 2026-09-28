@@ -15,13 +15,8 @@ from app.config import get_settings
 
 # Thread lock for singleton initialization
 _llm_lock = threading.Lock()
-from app.services.prompts import (
-    BUYER_ENTITIES,
-    ENTITIES_VERSION,
-    ENTITY_BY_ID,
-    REQUIRED_FIELDS,
-    get_vision_prompt,
-)
+from app.services import app_settings
+from app.services.prompts import REQUIRED_FIELDS, get_vision_prompt
 from app.services.validation import POSTPROCESS_VERSION, validate
 
 logger = logging.getLogger(__name__)
@@ -143,6 +138,7 @@ def _dump_llm_exchange(
     error: Optional[str] = None,
     prompt_version: Optional[str] = None,
     validation: Any = None,
+    entities_version: Optional[str] = None,
 ) -> Optional[Path]:
     """Write one file per LLM call showing the response before/after cleaning.
 
@@ -174,7 +170,7 @@ def _dump_llm_exchange(
             f"Provider   : {provider_name}",
             f"Model      : {model}",
             f"Prompt     : {prompt_version or '(unknown)'}",
-            f"Entities   : {ENTITIES_VERSION}",
+            f"Entities   : {entities_version or app_settings.current().entities_version}",
             f"Postprocess: {POSTPROCESS_VERSION}",
         ]
         if error:
@@ -736,8 +732,11 @@ class LLMService:
 
         label = ctx.label if ctx else "invoice=? file=?"
         content: Optional[str] = None
+        # 主体清单可在设置页修改：同一次调用里渲染 prompt 与解析响应必须用同一份清单，
+        # 否则模型按旧清单选的 id 会被按新清单查表。
+        cfg = app_settings.current()
         system_prompt, user_prompt, prompt_version = get_vision_prompt(
-            getattr(settings, "prompt_version", None)
+            getattr(settings, "prompt_version", None), cfg.entities
         )
         try:
             content = provider.vision_completion(
@@ -748,7 +747,7 @@ class LLMService:
             )
 
             return self._parse_json_response(
-                content, provider.get_provider_name(), ctx, prompt_version
+                content, provider.get_provider_name(), ctx, prompt_version, cfg
             )
 
         except json.JSONDecodeError as e:
@@ -762,6 +761,7 @@ class LLMService:
                 content,
                 error=f"JSONDecodeError: {e}",
                 prompt_version=prompt_version,
+                entities_version=cfg.entities_version,
             )
             return {}
         except Exception as e:
@@ -775,6 +775,7 @@ class LLMService:
                 content,
                 error=f"{type(e).__name__}: {e}",
                 prompt_version=prompt_version,
+                entities_version=cfg.entities_version,
             )
             return {}
 
@@ -831,6 +832,7 @@ class LLMService:
         provider_name: str,
         ctx: Optional["LLMCallContext"] = None,
         prompt_version: Optional[str] = None,
+        cfg: Optional[app_settings.ReviewSettings] = None,
     ) -> Dict[str, Any]:
         """Parse JSON from LLM response with schema validation and data cleaning.
 
@@ -838,10 +840,13 @@ class LLMService:
             content: Raw response content from LLM
             provider_name: Name of the provider for logging
             ctx: Invoice identity (id, file name) used only for logs and dumps
+            cfg: The settings snapshot the prompt was rendered with (defaults to current)
 
         Returns:
             Parsed and validated dictionary of fields
         """
+        cfg = cfg or app_settings.current()
+        entities = cfg.entities
         raw_content = content
         # Try to extract JSON from response
         if content.startswith("```"):
@@ -872,7 +877,7 @@ class LLMService:
         entity_id = raw_fields.get("buyer_entity_id")
         if entity_id is not None:
             key = str(entity_id).strip().upper()
-            entity = ENTITY_BY_ID.get(key)
+            entity = next((e for e in entities if e["id"] == key), None)
             if entity:
                 fields["buyer_name"] = entity["name"]
                 fields["buyer_tax_id"] = entity["tax_id"]
@@ -885,13 +890,20 @@ class LLMService:
 
         # 校验层。seller_is_entity 触发时把销售方置空并判为 rejected，
         # 其余规则只报警、不改写任何值。
-        result = validate(fields, BUYER_ENTITIES)
+        result = validate(fields, entities)
         fields = result.fields
         for k in result.nulled:
             changes.append(f"{k}: 因 seller_is_entity 命中而置空")
 
         populated = [k for k, v in fields.items() if v is not None]
         extra_keys = [k for k in raw_fields if k not in REQUIRED_FIELDS]
+
+        # v6 融合层需要模型的**原始**响应，不能用上面这份 fields：
+        #   1. buyer_entity_id 已经在这里被查表消费掉了，fuse() 拿不到它，
+        #      会误以为模型没给主体 id 而回落到识别值；
+        #   2. fields 里的购买方已被规范值覆盖，拿它当作“VLM 的识别值”
+        #      去做交叉校验是失真的 —— 永远一致，校验等于没做。
+        fields["_raw"] = dict(raw_fields)
         # Emitted at WARNING on purpose: the app never configures the root logger,
         # and uvicorn's default logging config leaves it without a handler, so INFO
         # records are dropped by logging.lastResort before they reach stderr.
@@ -924,6 +936,7 @@ class LLMService:
             extra_keys=extra_keys,
             prompt_version=prompt_version,
             validation=result,
+            entities_version=cfg.entities_version,
         )
         if dump_path:
             logger.warning(f"LLM ({provider_name}) dump written: {dump_path}")

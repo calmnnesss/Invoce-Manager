@@ -1,0 +1,104 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-base);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) minmax(180px, 240px) 40px;
+  gap: var(--spacing-md);
+  align-items: start;
+  padding: var(--spacing-md) var(--spacing-base);
+  border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.headRow {
+  align-items: center;
+  padding-top: var(--spacing-sm);
+  padding-bottom: var(--spacing-sm);
+  background: var(--surface);
+  border-radius: var(--radius-base) var(--radius-base) 0 0;
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--muted-foreground);
+}
+
+.entityId {
+  line-height: 32px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  font-size: var(--font-size-sm);
+  color: var(--muted-foreground);
+}
+
+.newBadge {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--info-dark);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+}
+
+.taxInput {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  letter-spacing: 0.02em;
+}
+
+.fieldError {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xs);
+  color: var(--error-dark);
+  line-height: var(--line-height-normal);
+}
+
+.rowAction {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rowAction :global(.ant-btn) {
+  color: var(--muted-foreground);
+}
+
+.rowAction :global(.ant-btn:not(:disabled):hover) {
+  color: var(--error-dark) !important;
+}
+
+.addButton {
+  margin-top: var(--spacing-md);
+}
+
+@media (max-width: 720px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) 40px;
+  }
+
+  .headRow {
+    display: none;
+  }
+
+  .entityId {
+    grid-column: 1 / -1;
+    line-height: var(--line-height-normal);
+  }
+
+  .row > .cell {
+    grid-column: 1;
+  }
+
+  .rowAction {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
