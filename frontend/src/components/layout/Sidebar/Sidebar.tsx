@@ -18,7 +18,7 @@ interface SidebarProps {
 const SETTINGS_PATH = '/settings';
 
 const navItems: NavItem[] = [
-  { path: '/', label: '发票列表' },
+  { path: '/invoices', label: '发票列表' },
   { path: '/upload', label: '上传发票' },
   { path: SETTINGS_PATH, label: '设置' },
 ];
@@ -37,11 +37,11 @@ export default function Sidebar({ llmConfigured }: SidebarProps) {
     <aside className={styles.sidebar}>
       {/* Top Section: Logo + Navigation */}
       <div className={styles.sidebarTop}>
-        {/* Logo */}
-        <div className={styles.logo}>
+        {/* Logo：回到项目介绍页 */}
+        <Link to="/" className={styles.logo} title="项目介绍">
           <div className={styles.logoMark} />
           <span className={styles.logoText}>发票管理</span>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className={styles.navigation}>

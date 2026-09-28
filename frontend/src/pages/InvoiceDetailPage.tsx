@@ -16,7 +16,7 @@ function InvoiceDetailPage() {
       <Result
         status="404"
         title="发票不存在"
-        extra={<Button onClick={() => navigate('/')}>返回列表</Button>}
+        extra={<Button onClick={() => navigate('/invoices')}>返回列表</Button>}
       />
     );
   }

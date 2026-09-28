@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 import UploadPage from './pages/UploadPage';
 import InvoiceListPage from './pages/InvoiceListPage';
 import InvoiceDetailPage from './pages/InvoiceDetailPage';
@@ -7,7 +8,8 @@ import SettingsPage from './pages/SettingsPage';
 import { MainLayout } from './components/layout';
 import { getLLMStatus } from './services/api';
 
-function AppContent() {
+/** 应用本体：侧栏布局 + 模型服务状态。介绍页在它外面，不检查状态、不显示侧栏。 */
+function AppShell() {
   const [llmConfigured, setLlmConfigured] = useState<boolean | null>(null);
   const [showLlmPromo, setShowLlmPromo] = useState(false);
 
@@ -43,10 +45,11 @@ function AppContent() {
       onCloseLLMPromo={() => setShowLlmPromo(false)}
     >
       <Routes>
-        <Route path="/" element={<InvoiceListPage />} />
+        <Route path="/invoices" element={<InvoiceListPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/settings" element={<SettingsPage onLLMConfigured={handleLLMConfigured} />} />
         <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </MainLayout>
   );
@@ -55,7 +58,11 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+        {/* 项目介绍页：全屏独立页面，发票列表在 /invoices */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/*" element={<AppShell />} />
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -280,7 +280,7 @@ export default function ReviewWorkspace({ invoiceId }: { invoiceId: number }) {
           title={review.loadState === 'not-found' ? '发票不存在' : '加载失败'}
           subTitle={review.loadState === 'not-found' ? '它可能已被删除' : '请检查网络后重试'}
           extra={[
-            <Button key="back" onClick={() => navigate('/')}>返回列表</Button>,
+            <Button key="back" onClick={() => navigate('/invoices')}>返回列表</Button>,
             review.loadState === 'error' && (
               <Button key="retry" type="primary" onClick={() => void review.reload()}>重试</Button>
             ),
@@ -357,7 +357,7 @@ export default function ReviewWorkspace({ invoiceId }: { invoiceId: number }) {
     <div className={styles.workspace}>
       {/* ---------------- 头部 ---------------- */}
       <header className={styles.header}>
-        <button type="button" className={styles.back} onClick={() => navigate('/')}>
+        <button type="button" className={styles.back} onClick={() => navigate('/invoices')}>
           <ArrowLeftOutlined /> 返回列表
         </button>
         <div className={styles.titleBlock}>
@@ -469,7 +469,7 @@ export default function ReviewWorkspace({ invoiceId }: { invoiceId: number }) {
                     下一张待审核 <RightOutlined />
                   </Button>
                 ) : (
-                  <Button onClick={() => navigate('/')}>
+                  <Button onClick={() => navigate('/invoices')}>
                     {queueDone ? '待审核发票已全部处理，返回列表' : '返回列表'}
                   </Button>
                 )

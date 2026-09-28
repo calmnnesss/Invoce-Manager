@@ -1,0 +1,556 @@
+/*
+ * 项目介绍页。沿用应用的设计变量（黑白灰 + 品牌红、4–8px 圆角、1px 细线），不用阴影。
+ * 红色只用于：主按钮、当前语言、流程图里的复核路径与「低」、第三层色条、试用步骤编号、链接悬停。
+ */
+.page {
+  /* Space Grotesk / Inter 没有中文字形，而全局字体栈以 sans-serif 结尾、走不到中文字体，这里补上 */
+  --lp-display: 'Space Grotesk', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --lp-text: 'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --lp-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  --lp-red-hover: #C41E10;
+
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--lp-text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* 全局样式给 p 加了下边距、给 a 上了红色，这里统一收回，由各处自己决定 */
+.page p {
+  margin: 0;
+}
+
+.page a {
+  color: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: 1128px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  border-bottom: 1px solid var(--border);
+}
+
+.topbarInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 56px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--lp-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+.brandMark {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-base);
+  background: var(--red-primary);
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.langSwitch {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.langItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+.langDivider {
+  margin: 0 6px;
+  color: var(--border);
+}
+
+.langButton,
+.langActive {
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  color: var(--muted-foreground);
+  transition: color var(--transition-fast);
+}
+
+.langButton:hover {
+  color: var(--foreground);
+}
+
+.langActive {
+  color: var(--red-primary);
+  font-weight: 600;
+}
+
+.page .navLink {
+  font-size: 13px;
+  color: var(--foreground);
+}
+
+.page .navLink:hover {
+  color: var(--red-primary);
+}
+
+/* ---------- 按钮（普通链接，不用 antd Button，避开全局 !important 覆盖） ---------- */
+.page .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-base);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.page .buttonPrimary {
+  background: var(--red-primary);
+  color: var(--background);
+}
+
+.page .buttonPrimary:hover {
+  background: var(--lp-red-hover);
+  color: var(--background);
+}
+
+.page .buttonOutline {
+  border-color: var(--foreground);
+  color: var(--foreground);
+}
+
+.page .buttonOutline:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.page .buttonSmall {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+/* ---------- 首屏 ---------- */
+.hero {
+  padding: 112px 0 96px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted-foreground);
+}
+
+.heroTitle {
+  margin: 20px 0 0;
+  max-width: 17em;
+  font-family: var(--lp-display);
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  /* 中文标题只在标点处折行（keep-all），两行尽量等长，不会只剩一两个字 */
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.heroActions {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page .heroTry {
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--foreground);
+  border-bottom: 1px solid transparent;
+}
+
+.page .heroTry:hover {
+  color: var(--foreground);
+  border-bottom-color: var(--foreground);
+}
+
+/* ---------- 通用分区 ---------- */
+.section {
+  padding: 88px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sectionSurface {
+  background: var(--surface);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--lp-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--foreground);
+}
+
+.page .sectionLead {
+  margin-top: 10px;
+  max-width: 40em;
+  font-size: 16px;
+  color: var(--muted-foreground);
+}
+
+/* ---------- 工作流程 ---------- */
+.diagram {
+  margin-top: 48px;
+}
+
+.fields {
+  margin-top: 48px;
+  border-top: 1px solid var(--border);
+}
+
+.fieldsSummary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+  list-style: none;
+}
+
+.fieldsSummary::-webkit-details-marker {
+  display: none;
+}
+
+.fieldsSummary::before {
+  content: '+';
+  width: 12px;
+  font-family: var(--lp-mono);
+  color: var(--muted-foreground);
+}
+
+.fields[open] .fieldsSummary::before {
+  content: '−';
+}
+
+.fieldsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.fieldsTable th,
+.fieldsTable td {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  background: var(--background);
+}
+
+.fieldsTable th {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.fieldsTable td:first-child {
+  width: 34%;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.fieldsTable td:last-child {
+  color: var(--muted-foreground);
+}
+
+/* ---------- 设计原则 ---------- */
+.principles {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 56px 64px;
+}
+
+.principle {
+  padding-top: 20px;
+  border-top: 2px solid var(--foreground);
+}
+
+.principleIndex {
+  font-family: var(--lp-mono);
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.principleTitle {
+  margin: 6px 0 0;
+  font-family: var(--lp-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--foreground);
+}
+
+.page .principleBody {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--muted-foreground);
+}
+
+.layers {
+  margin: 16px 0 0;
+  padding: 16px 18px;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.layer {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  padding-left: 12px;
+  border-left: 3px solid var(--border);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.layer:last-child {
+  border-left-color: var(--red-primary);
+}
+
+.layerName {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.layerRule {
+  color: var(--muted-foreground);
+}
+
+.page .codeLinks {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  font-family: var(--lp-mono);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.page .codeLinks a {
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+}
+
+.page .codeLinks a:hover {
+  color: var(--red-primary);
+  border-bottom-color: var(--red-primary);
+}
+
+/* ---------- 试用 ---------- */
+.tryCard {
+  max-width: 760px;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.trySteps {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+.trySteps li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+}
+
+.tryIndex {
+  font-family: var(--lp-mono);
+  font-size: 13px;
+  line-height: 1.95;
+  color: var(--red-primary);
+}
+
+.tryText {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--foreground);
+}
+
+.chip {
+  display: inline-block;
+  margin: 0 2px;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-base);
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.kbd {
+  margin: 0 2px;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: var(--radius-base);
+  background: var(--surface);
+  font-family: var(--lp-mono);
+  font-size: 12px;
+}
+
+.page .tryAction {
+  margin-top: 28px;
+}
+
+.page .tryNote {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted-foreground);
+}
+
+/* ---------- 页脚 ---------- */
+.footer {
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+
+.footerInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  font-family: var(--lp-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+
+.footerLinks {
+  display: inline-flex;
+  gap: 16px;
+}
+
+.page .footerLinks a {
+  color: var(--foreground);
+}
+
+.page .footerLinks a:hover {
+  color: var(--red-primary);
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 1023px) {
+  .principles {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .topnav {
+    gap: 14px;
+  }
+
+  .hero {
+    padding: 64px 0 56px;
+  }
+
+  .heroTitle {
+    font-size: 32px;
+  }
+
+  .section {
+    padding: 64px 0;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+  }
+
+  .tryCard {
+    padding: 20px;
+  }
+
+  /* 字段表改成上下两行一组 */
+  .fieldsTable thead {
+    display: none;
+  }
+
+  .fieldsTable tr {
+    display: block;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    background: var(--background);
+  }
+
+  .fieldsTable td {
+    display: block;
+    width: auto;
+    border: 0;
+    padding: 8px 12px;
+  }
+
+  .fieldsTable td:first-child {
+    width: auto;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 顶栏只留语言切换和进入系统，GitHub 在首屏按钮里还有 */
+  .page .navLink {
+    display: none;
+  }
+}
