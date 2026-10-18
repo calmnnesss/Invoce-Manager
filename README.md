@@ -2,567 +2,396 @@
 
 # Invoice Manager 🧾
 
-### AI-Powered Chinese Invoice Recognition with Dual-Source Verification
-### AI驱动的中文发票识别系统 · OCR+LLM双源验证
-
-**v0.3.0** | Latest Release: 2026-01-24
+### 三路抽取 · 置信度融合的中文增值税发票识别系统
+### Chinese VAT Invoice Extraction with Tri-Source Fusion
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109-009688.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18.2-61DAFB.svg)](https://reactjs.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
-![OCR](https://img.shields.io/badge/OCR-qwen3.5--ocr-0052CC.svg)
+![Pipeline](https://img.shields.io/badge/Pipeline-v6-0052CC.svg)
 
-**[English](#-highlights) | [简体中文](#-亮点)**
+**[在线体验 Live Demo](https://invoice.yukeyao.dev)**
 
 <br/>
 
-> 🎯 **不只是OCR，是让AI帮你双重检查每一张发票**
+> **这个系统里，没有一个字段是「某个模型说什么就是什么」。**
 >
-> 传统OCR识别率只有70-80%，商业方案价格昂贵。Invoice Manager 使用 **OCR + LLM 双源验证**，
-> 让两个AI互相校验，准确率大幅提升，而且完全免费开源！
+> 要么来自确定性来源（二维码），要么查主数据表，要么按勾稽公式算出来，
+> 要么多路交叉比对后取优先线 —— 模型的识别结果一律降级为**校验证据**。
+>
+> 因为在报销场景里，真正的风险不是「识别得不够准」，
+> 而是**「错了但没人知道」**。
 
 </div>
 
 ---
 
-## ✨ Highlights
+## ✨ 亮点 | Highlights
 
-- **🔍 Dual-Source Verification** - OCR + LLM double-check every field, conflicts auto-flagged for review
-- **🤖 Multi-LLM Support** - GPT-4o / Claude / Gemini / Qwen / DeepSeek / Zhipu GLM
-- **🇨🇳 Chinese Invoice Optimized** - qwen3.5-ocr structured extraction + custom prompts for VAT invoices (增值税发票)
-- **⚡ Parallel Processing** - OCR and LLM run simultaneously for faster results
-- **🐳 One-Click Deploy** - Docker Compose, ready in 3 minutes
-- **🔒 Self-Hosted** - Invoice records stay in your own database; invoice images are sent only to the model services you configure
-
-## ✨ 亮点
-
-- **🔍 双源验证** - OCR + LLM 双重识别，字段冲突自动标记待审核
-- **🤖 多模型支持** - 支持 GPT-4o / Claude / Gemini / 通义千问 / DeepSeek / 智谱GLM
-- **🇨🇳 中文发票优化** - qwen3.5-ocr 结构化抽取 + 增值税发票专用提示词
-- **⚡ 并行处理** - OCR 和 LLM 同时运行，识别更快
-- **🐳 一键部署** - Docker Compose 启动，3分钟搞定
-- **🔒 私有部署** - 发票记录存在你自己的数据库；识别时发票图片只发送给你配置的模型服务
+- **🔀 三路并行抽取** — 二维码（确定性）、qwen3.5-ocr（结构化抽取）、qwen-vl-max（视觉理解）同时跑，互为交叉验证
+- **🎯 逐字段选源** — 每个字段按实测表现指定主源与兜底，输出带 `source` + `confidence` 标注，可追溯到三路各自说了什么
+- **🧮 能算的不识别** — 税额与价税合计由「金额 × 税率」算出，购买方由主数据回填，从源头消灭两类最脏的字段
+- **🛡️ 五条校验规则** — 买卖方倒置、税号校验位、代码位数、计算值比对、多路分歧，错误不修正、只标记
+- **📏 静默错误率为核心指标** — 不追求「识别更准」，追求「错了能被发现」
+- **🔬 离线评测闭环** — 融合层是纯函数，可在历史日志上零 API 成本重放；prompt 版本 / 主数据清单 / 后处理版本三个维度都写进日志指纹
+- **🐳 一键部署** — Docker Compose，发票记录存在自己的数据库
 
 ---
 
-## 📦 版本更新 | Changelog
-
-### v0.3.0 (2026-01-24) - UI 全面改版 | UI Redesign
-
-**🎨 全新设计系统 | New Design System**
-- 采用 Swiss Clean Web Dashboard 设计风格，专业简洁
-- 全新配色方案：朱红色品牌色 (#E42313) + 清爽白灰色调
-- 字体升级：Space Grotesk (标题) + Inter (正文)
-- 统一的圆角、边框、间距设计规范
-
-**🧩 新增组件 | New Components**
-- **Sidebar 侧边栏导航** - 替代顶部导航，提供更清晰的页面结构
-- **MetricCard 统计卡片** - 发票列表页顶部显示关键统计数据
-- **StatusTag 状态标签** - 统一的状态展示组件 (待审核/处理中/已确认等)
-- **ControlBar 控制栏** - 搜索、筛选、操作按钮的统一布局
-
-**📄 页面重构 | Page Redesign**
-- **发票列表页** - 全新布局，新增4个统计卡片展示发票数量、金额合计、税额合计、价税合计
-- **发票详情页** - 双栏布局 (数据卡片 + PDF预览)，**OCR vs LLM 差异可视化高亮** (红色背景标记不匹配字段)
-- **上传页面** - 简洁的拖拽上传区域，品牌化设计
-
-**✨ 关键 UX 改进 | Key UX Improvements**
-- **差异可视化** - OCR 与 LLM 识别结果对比表，不匹配字段自动红色高亮
-- **匹配计数器** - "X/Y 字段匹配" 直观显示识别一致性
-- **状态图标** - ✓/✗ 图标快速识别匹配状态
-- **更好的层级** - 卡片式设计，信息分组更清晰
-
-**⚙️ 后端增强 | Backend Improvements**
-- OpenRouter 模型支持 - 接入更多最新 AI 模型
-- 审计日志 - 记录关键操作
-- 速率限制 - 防止 API 滥用
-- OCR 服务优化 - 更好的中文发票识别
-- 改进的 LLM 提示词 - 更精准的发票信息提取
-
-**🎯 设计文件 | Design Files**
-- 新增 `docs/invoice-manager.pen` - 完整的 UI 设计稿 (Pencil 格式)
-- 新增 `docs/UI_REDESIGN.md` - 设计规范文档
-
----
-
-### v0.2.0 - 多LLM支持 + 双源验证
-
-- 支持 6 种 LLM 提供商 (OpenAI, Anthropic, Google, 阿里云, DeepSeek, 智谱)
-- OCR + LLM 双源验证机制
-- 冲突检测与人工复核流程
-
-### v0.1.0 - 基础版本
-
-- PaddleOCR 中文发票识别
-- 基础的发票管理 CRUD
-- Docker 一键部署
-
----
-
-## 🖼️ 截图预览 | Screenshots
-
-<div align="center">
-
-### 发票详情 & OCR vs LLM 比对 | Invoice Detail & Dual-Source Comparison
-
-![Invoice Detail](docs/images/invoice-detail.png)
-
-*左侧：发票基础信息和原始文件预览 | 下方：OCR与LLM识别结果对比，可一键选择或自定义*
-
-</div>
-
-**截图亮点 | Screenshot Highlights:**
-- 📋 **发票信息卡片** - 清晰展示所有提取字段
-- 📄 **原始文件预览** - PDF/图片内嵌预览，无需下载
-- ⚖️ **OCR vs LLM 比对表** - 并排显示两种识别结果
-- 🏷️ **状态标签** - 已解决/待确认，一目了然
-- 🖱️ **一键选择** - 点击"选择"采用该结果，或"自定义"手动输入
-
----
-
-### 列表页面
-
-![Invoice List](docs/images/invoice-list.png)
-
-### 上传页面
-
-![Invoice Upload](docs/images/invoice-upload.png)
-
-## 🎯 解决的问题 | Problem Solved
+## 🎯 要解决的问题 | Problem
 
 <table>
-<tr>
-<td width="50%">
+<tr><td width="50%">
 
-### 😫 传统方式的痛点
+### 😫 常规做法的问题
 
-- ❌ 手动录入发票信息，费时费力
-- ❌ 单一OCR识别率不够高（70-80%）
-- ❌ 商业方案价格昂贵（按张收费）
-- ❌ 现有开源方案功能单一
-- ❌ 数据上传第三方，隐私风险
+- ❌ 单模型识别，错了无从发现
+- ❌ 准确率 85% 听起来够用，但**整单可用率可能只有 30%**
+- ❌ 买卖方位置填反 —— 字段全部合法，审批流一路绿灯
+- ❌ 手机拍摄的发票方向不一，版面理解大幅退化
+- ❌ 清洗器把「只差一位」的值删成 `null`，可诊断的错误变成信息缺失
 
-</td>
-<td width="50%">
+</td><td width="50%">
 
-### 😊 Invoice Manager 的解决方案
+### 😊 本项目的做法
 
-- ✅ 自动识别，批量上传处理
-- ✅ 双源验证，准确率显著提升
-- ✅ 完全免费，MIT 开源协议
-- ✅ 全流程管理，从识别到报销
-- ✅ 私有部署，发票记录完全可控
+- ✅ 三路独立抽取，**不一致本身就是检测信号**
+- ✅ 主指标改为整单全对率 + 静默错误率
+- ✅ 销售方落在本企业主体清单中 → 硬矛盾，直接拒绝
+- ✅ 购买方改为闭集选择 + 主数据回填，不依赖版面理解
+- ✅ 格式不合规保留原值并打标记，不静默删除
 
-</td>
-</tr>
+</td></tr>
 </table>
 
 ---
 
-## 🏗️ 核心架构 | Architecture
+## 🧩 它是怎么工作的 | How It Works
 
 ```
-                              ┌─────────────────┐
-                              │   发票上传       │
-                              │  Invoice Upload  │
-                              └────────┬────────┘
-                                       │
-                    ┌──────────────────┼──────────────────┐
-                    │                  │                  │
-                    ▼                  │                  ▼
-           ┌───────────────┐           │         ┌───────────────┐
-           │  qwen3.5-ocr  │           │         │   LLM Vision  │
-           │   通义千问OCR  │           │         │  GPT-4/Claude │
-           └───────┬───────┘           │         └───────┬───────┘
-                   │                   │                 │
-                   │         ┌────────────────┐          │
-                   └────────►│  智能比对引擎  │◄─────────┘
-                             │ Diff Engine   │
-                             └───────┬───────┘
-                                     │
-                    ┌────────────────┼────────────────┐
-                    ▼                                 ▼
-           ┌───────────────┐                 ┌───────────────┐
-           │   ✅ 匹配      │                 │   ⚠️ 冲突     │
-           │  自动确认      │                 │  人工复核     │
-           │  CONFIRMED    │                 │  REVIEWING    │
-           └───────────────┘                 └───────────────┘
+                          发票图片
+                             │
+            ┌────────────────┼────────────────┐
+            ▼                ▼                ▼
+      A 二维码解码      B qwen3.5-ocr     C qwen-vl-max
+      本地 zbar/cv2     结构化字段抽取      视觉理解 + 闭集选择
+      确定性，不会幻觉   rotate=off         prompt v3.1
+            └────────────────┼────────────────┘
+                             ▼
+                    归一化 + 回声检测
+              （表头被原样抄回时判为「未识别」）
+                             ▼
+                   ┌─────────────────┐
+                   │   逐字段选源     │
+                   │ 二维码→certain   │
+                   │ 多路一致→high    │
+                   │ 不一致/单源→low  │
+                   └─────────────────┘
+                             ▼
+              购买方查表  ·  税额与合计按公式算出
+                             ▼
+                   校验层（五条规则）
+                             ▼
+              ok  /  warn  /  rejected  →  入库
 ```
 
-**Why Dual-Source Verification Works | 为什么双源验证更准确**
+### 逐字段选源表
 
-| 场景 | 单一OCR | 单一LLM | 双源验证 |
-|-----|--------|---------|---------|
-| 模糊字符 | ❌ 可能误识别 | ✅ 理解上下文 | ✅ 互相校验 |
-| 非标准格式 | ❌ 正则失效 | ✅ 智能解析 | ✅ 双重保障 |
-| 金额数字 | ✅ 精确识别 | ⚠️ 可能幻觉 | ✅ 数值比对 |
-| 处理成本 | 💰 低 | 💰💰 高 | 💰 按需调用 |
+| 字段 | 主源 | 兜底 | 校验 |
+|---|---|---|---|
+| 发票代码 / 号码 / 开票日期 | **二维码** | 视觉模型 → OCR | 位数校验、三路比对 |
+| 不含税金额 | **二维码** | 视觉模型 | 与勾稽关系互验 |
+| 购买方名称 / 税号 | **主体清单查表** | — | 识别值仅作核对 |
+| 销售方名称 | **OCR** | 视觉模型 | 与视觉模型比对 |
+| 销售方税号 | **OCR** | 视觉模型 | 位数 + 统一社会信用代码校验位 |
+| 税率 | 视觉模型 | OCR | 与计算结果自洽 |
+| 税额 / 价税合计 | **计算** | 识别值（降级时） | 计算值 vs 识别值 |
+| 项目名称 | 视觉模型 | — | — |
+
+销售方两个字段之所以是 OCR 优先：51 张实测中两路不一致共 7 次，**OCR 全对、视觉模型全错，没有一次相反**。
+而且两者的错误形态不同 —— OCR 不确定时返回 `null`（可检测），视觉模型会给出格式合法的错值（静默）。
+
+### 校验层
+
+| 规则 | 判据 | 动作 |
+|---|---|---|
+| `seller_is_entity` | 销售方 ∈ 报销主体清单 | **拒绝**，销售方置空转人工 |
+| `computed_vs_recognized` | 计算值与任一路识别值差 > 0.01 | 报警 |
+| `tax_id_format` | 位数非 15/18，或 18 位校验位不通过 | 报警 |
+| `invoice_number_format` | 代码非 10–12 位、号码非 8–10 位、两者相同 | 报警 |
+| `cross_source_mismatch` | 存在多路不一致的字段 | 报警 |
+
+**规则只标记、不修正。** 知道一个值错了，不等于知道正确值是什么 —— 猜测会把可见错误变成静默错误。
+
+---
+
+## 📊 实测效果 | Results
+
+51 张手机拍摄的增值税专用发票，10 个受评字段（发票号码每张不同、未标注，不参与评分）：
+
+| 指标 | 数值 |
+|---|---|
+| **整单 10 字段全对** | **50/51 = 98.0%** |
+| **静默错误率**（错了但未触发任何规则） | **0 / 51 = 0%** |
+| 错误拦截率 | 1/1 = 100% |
+| 九个字段 51/51 全对 | 发票代码、开票日期、买卖双方名称与税号、税率等 |
+
+唯一出错的一张是金额被读成了另一个数值，连带算出的税额与价税合计也错 —— 但被 `computed_vs_recognized` 与 `tax_id_format` 同时拦下。
+
+### ⚠️ 已知局限
+
+这些是实测暴露出来的真实边界，不是待办清单上的客套话：
+
+- **误伤率偏高**：当前二维码线路未启用，`amount` 成为唯一单源字段，导致 51 张全部被判为 `warn`。全部标红等于没有标红 —— 判定需要进一步区分「值存疑」与「来源不够冗余」。
+- **二维码在本测试集 51/51 解码失败**：zbar 与 cv2 两个解码器、四档缩放、灰度变体均已尝试。二维码区域在 3120×4208 的画面中占比过小是可能原因之一。该线路因此改为结果页手动触发。
+- **样本为单一版式**：51 张均为同一版式的增值税专用发票。结论能否推广到数电票、普票、卷票尚未验证。
+- **OCR 的 `enable_rotate=False` 是对本数据集的适配**：这批图中 44 张恰为顺时针侧存，关闭转正后模型进入「主体模式」，销售方税号从 11/51 提升至 45/51。真实用户上传的发票多为正放，届时可能退化，上线前需用正放样本复测。
+- **OCR 的 schema 要 11 个字段但只采信 2 个**：收窄到 2 字段后销售方税号从 45/51 跌至 0/51。多出的 9 个字段是定位上下文而非冗余，删除会导致功能退化。
+
+---
+
+## 🔬 评测体系 | Evaluation Harness
+
+迭代过程中最关键的基础设施不是管线本身，而是**可复现的离线评测**：
+
+- **融合层与校验层都是纯函数** —— 不碰数据库、不发网络请求，因此可以直接在历史日志上重放。改一条融合规则、调一个阈值，重放一次即可看到效果，**零 API 成本**。
+- **三维度版本指纹** —— 每条调用日志都记录 `Prompt` / `Entities` / `Postprocess` 三个版本号。同一个 prompt 版本下换了主数据清单，prompt 内容实际已经不同，仅靠版本号会静默混淆；清单指纹由内容哈希自动生成，忘记手动改标签也不会出错。
+- **主指标明确** —— 字段级准确率会显著高估可用性（曾出现字段级 85.1% 而整单全对仅 29.4%）。对外口径以整单全对率与静默错误率为准。
+
+```bash
+cd backend
+
+# 跑三条线路并输出融合报告（约 102 次 API 调用）
+bash eval/run_v6.sh
+
+# 只重放融合层，不调用任何模型
+SKIP_VLM=1 SKIP_OCR=1 SKIP_QR=1 bash eval/run_v6.sh
+```
+
+产物在 `backend/eval/reports/`：逐字段 CSV（含三路原始值）、逐单据汇总 CSV、文字报告。
 
 ---
 
 ## 🚀 快速开始 | Quick Start
 
-### 最简3步启动 | 3 Steps to Start
-
 ```bash
-# 1. 克隆项目 | Clone
-git clone https://github.com/YOUR_USERNAME/invoice_manager.git
-cd invoice_manager
+# 1. 克隆
+git clone https://github.com/calmnnesss/Invoce-Manager.git
+cd Invoce-Manager
 
-# 2. 配置LLM (可选) | Configure LLM (Optional)
-# 在 backend/.env 中设置 API Key，或稍后在界面中配置
-# Set API Key in backend/.env, or configure later in UI
+# 2. 配置模型 API Key
+#    backend/.env 中填入阿里云百炼的 API Key
+#    QWEN_API_KEY=sk-xxxx
+cp backend/.env.example backend/.env
 
-# 3. 启动服务 | Start Services
-docker-compose up -d
+# 3. 启动
+docker compose up -d
 ```
 
-### 访问地址 | Access URLs
+| 服务 | 地址 |
+|---|---|
+| 前端 | http://localhost:15173 |
+| 后端 API | http://localhost:18080 |
+| API 文档 | http://localhost:18080/docs |
 
-| 服务 | 地址 | 说明 |
-|-----|------|------|
-| 前端界面 | http://localhost:15173 | 主操作界面 |
-| 后端 API | http://localhost:18080 | REST API |
-| API 文档 | http://localhost:18080/docs | Swagger UI |
+### 关键配置
 
-### 配置 LLM | Configure LLM
+```bash
+# backend/.env
+QWEN_API_KEY=sk-xxxx           # 阿里云百炼，VLM 与 OCR 两条线路共用
+QWEN_MODEL=qwen-vl-max         # 视觉理解线路
+PROMPT_VERSION=v3.1            # 提示词版本，见 app/services/prompts.py
+OCR_ENABLE_ROTATE=false        # OCR 图像转正，实测依据见 qwen_ocr_service.py
+OCR_MAX_PIXELS_N=8192          # max_pixels = 32*32*N
+QR_ENABLED=false               # 二维码线路，默认关闭、结果页手动触发
+```
 
-系统支持 **6 种 LLM 提供商**，可在界面中实时切换：
-
-| Provider | Models | 获取 API Key |
-|----------|--------|-------------|
-| OpenAI | GPT-4o, GPT-4o-mini | [platform.openai.com](https://platform.openai.com/) |
-| Anthropic | Claude 3.5 Sonnet, Claude 3 Opus | [console.anthropic.com](https://console.anthropic.com/) |
-| Google | Gemini 1.5 Pro, Gemini 1.5 Flash | [aistudio.google.com](https://aistudio.google.com/) |
-| 阿里云 | 通义千问 Qwen-VL | [dashscope.console.aliyun.com](https://dashscope.console.aliyun.com/) |
-| DeepSeek | DeepSeek-VL | [platform.deepseek.com](https://platform.deepseek.com/) |
-| 智谱 | GLM-4V | [open.bigmodel.cn](https://open.bigmodel.cn/) |
-
-> 💡 **提示**: 识别依赖模型服务：文字识别（qwen3.5-ocr）需要通义千问（DashScope）API Key；再配置一个视觉模型即可获得两路交叉核验。
+报销主体清单在 `backend/app/services/buyer_entities.json`，购买方从中闭集选择。
+主体清单、金额校验规则与模型服务也可在**前端设置页**直接维护，无需改代码或重启。
 
 ---
 
 ## 📋 功能特性 | Features
 
-### 发票处理 | Invoice Processing
+**识别与融合**
+- 图片（JPG/PNG）与 PDF 上传，PDF 取首页，与识别管线一致
+- 三路并行抽取，逐字段选源与置信度标注
+- 购买方闭集选择 + 主数据回填
+- 税额与价税合计按勾稽公式计算
+- 原件统一渲染为 JPEG，图片按 EXIF 转正，前端缩放 / 平移 / 旋转
 
-| 功能 | 描述 |
-|-----|------|
-| 📤 批量上传 | 支持 PDF、JPG、PNG，单次多文件上传 |
-| 🔍 OCR识别 | qwen3.5-ocr 结构化抽取，直接返回发票字段 |
-| 🤖 LLM解析 | Vision 模型直接理解发票图像 |
-| ⚖️ 智能比对 | 自动对比OCR和LLM结果，标记差异 |
-| ✏️ 人工复核 | 冲突字段可视化，一键选择正确值 |
-| 📊 统计报表 | 金额汇总、税额统计、状态分布 |
+**人工复核**
+- 字段级三路对比：最终值 + 来源徽标 + 置信标签，展开查看各路原始值
+- 查表与计算类字段显式标注「不由模型识别」，识别值仅作核对
+- 被拒绝置空的字段显示「已拒绝，需人工填写」，与「未识别」区分
+- 人工改值后按同一组规则重新校验，判定口径与自动流程一致
+- 结果页「用二维码重试」按钮，本地解码不消耗模型额度
 
-### 提取字段 | Extracted Fields
-
-```
-├── 基础信息
-│   ├── 发票号码 (invoice_number)
-│   ├── 开票日期 (issue_date)
-│   └── 项目名称 (item_name)
-│
-├── 购买方信息
-│   ├── 购买方名称 (buyer_name)
-│   └── 购买方税号 (buyer_tax_id)
-│
-├── 销售方信息
-│   ├── 销售方名称 (seller_name)
-│   └── 销售方税号 (seller_tax_id)
-│
-└── 金额信息
-    ├── 金额 (amount)
-    ├── 税率 (tax_rate)
-    ├── 税额 (tax_amount)
-    └── 价税合计 (total_with_tax)
-```
-
-### 状态流转 | Status Workflow
-
-```
-UPLOADED → PROCESSING → REVIEWING → CONFIRMED → REIMBURSED
-  上传       识别中       待审核       已确认       已报销
-                            ↓
-                      NOT_REIMBURSED
-                         未报销
-```
+**管理**
+- **设置页可直接维护报销主体清单、金额校验规则、模型服务**，无需改代码
+- 列表筛选、批量重处理、批量删除、统计卡片
+- CSV / Excel 导出
+- 审计日志、速率限制
 
 ---
 
 ## 📡 API 接口 | API Reference
 
-### 核心接口 | Core Endpoints
-
 ```bash
-# 上传发票 | Upload Invoice
-POST /api/invoices/upload
-Content-Type: multipart/form-data
+POST   /api/invoices/upload                    # 上传（支持多文件）
+GET    /api/invoices                           # 列表（分页 + 筛选）
+GET    /api/invoices/{id}                      # 详情（含三路结果与校验明细）
+GET    /api/invoices/statistics                # 统计
 
-# 获取列表 | Get List (with pagination & filters)
-GET /api/invoices?status=REVIEWING&owner=张三&page=1&page_size=20
+POST   /api/invoices/{id}/process              # 重新走一遍识别管线
+POST   /api/invoices/{id}/retry-qr             # 手动触发二维码解码
+PATCH  /api/invoices/{id}/fields/{field_name}  # 字段级确认 / 修改
+POST   /api/invoices/{id}/confirm              # 整单确认
 
-# 获取详情 | Get Detail (includes OCR, LLM, Diff results)
-GET /api/invoices/{id}
+GET    /api/invoices/{id}/file                 # 原文件下载
+GET    /api/invoices/{id}/preview              # 预览（统一 JPEG，已按 EXIF 转正）
 
-# 核对单个字段 | Confirm / edit one field (action: confirm | set | auto)
-PATCH /api/invoices/{id}/fields/{field_name}
-{
-  "action": "set",
-  "value": "2987.18"
-}
-
-# 原件预览（统一为 JPEG）| Original document preview
-GET /api/invoices/{id}/preview
-
-# 更新信息 | Update Invoice
-PUT /api/invoices/{id}
-{
-  "invoice_number": "12345678",
-  "total_with_tax": "1000.00",
-  "status": "CONFIRMED"
-}
-
-# 重新处理 | Reprocess
-POST /api/invoices/{id}/process
-
-# 批量操作 | Batch Operations
-POST /api/invoices/batch-update
-POST /api/invoices/batch-delete
-POST /api/invoices/batch-reprocess
-
-# 统计数据 | Statistics
-GET /api/invoices/statistics
-
-# LLM配置 | LLM Configuration
-GET  /api/settings/llm/status
-POST /api/settings/llm/configure
-POST /api/settings/llm/test
+POST   /api/invoices/batch-reprocess           # 批量重处理
+POST   /api/invoices/batch-update              # 批量更新
+GET    /api/invoices/export/csv                # 导出 CSV
+GET    /api/invoices/export/excel              # 导出 Excel
 ```
 
-完整 API 文档请访问 http://localhost:18080/docs
-
----
-
-## 🗺️ 路线图 | Roadmap
-
-- [x] **v0.1** - 基础OCR识别 + 发票管理
-- [x] **v0.2** - 多LLM支持 + 双源验证
-- [x] **v0.3** - UI全面改版 + OpenRouter模型支持 ✨ **当前版本**
-- [ ] **v0.4** - 报表导出 (Excel/PDF)
-- [ ] **v0.5** - 多用户权限管理
-- [ ] **v0.6** - 发票真伪验证 (对接税务API)
-- [ ] **v0.7** - 移动端适配
-- [ ] **v1.0** - 企业级功能 (审批流程、ERP集成)
-
-欢迎提 Issue 告诉我们你最需要的功能！
+详情接口返回的 `parsing_diffs` 中，每个字段都带 `qr_value` / `ocr_value` / `llm_value` / `final_value` / `source` / `confidence` / `note`，前端据此渲染三路对比。
 
 ---
 
 ## 🛠️ 技术栈 | Tech Stack
 
-<table>
-<tr>
-<td align="center" width="50%">
-
-**Backend**
-
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-
-- FastAPI 0.109 (Async REST API)
-- SQLAlchemy 2.0 + asyncpg (Async ORM)
-- qwen3.5-ocr via DashScope (Chinese OCR)
-- Multi-LLM SDK Integration
-
-</td>
-<td align="center" width="50%">
-
-**Frontend**
-
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Ant Design](https://img.shields.io/badge/Ant%20Design-0170FE?style=for-the-badge&logo=antdesign&logoColor=white)
-
-- React 18.2 + TypeScript
-- Vite 5.0 (Build Tool)
-- Ant Design 5.13 (UI Components)
-- CSS Modules + CSS Variables
-- Space Grotesk + Inter (Typography)
-- Axios (HTTP Client)
-
-</td>
-</tr>
-</table>
+| 层 | 技术 |
+|---|---|
+| 后端 | FastAPI · SQLAlchemy 2.0（async）· Pydantic v2 |
+| 前端 | React 18 · TypeScript · Ant Design 5 · Vite |
+| 数据库 | PostgreSQL 16 |
+| 视觉理解 | qwen-vl-max（阿里云百炼） |
+| 结构化抽取 | qwen3.5-ocr `key_information_extraction`（DashScope SDK） |
+| 二维码 | pyzbar / OpenCV，本地解码 |
+| 部署 | Docker Compose |
 
 ---
 
 ## 📁 项目结构 | Project Structure
 
 ```
-invoice_manager/
-├── backend/                    # FastAPI 后端
-│   ├── app/
-│   │   ├── models/            # SQLAlchemy 数据模型
-│   │   │   └── invoice.py     # Invoice, OcrResult, LlmResult, ParsingDiff
-│   │   ├── routers/           # API 路由
-│   │   │   ├── invoices.py    # 发票 CRUD + 处理
-│   │   │   └── settings.py    # LLM 配置
-│   │   ├── services/          # 业务逻辑
-│   │   │   ├── qwen_ocr_service.py # qwen3.5-ocr 文字识别
-│   │   │   ├── llm_service.py # 多 LLM 调用
-│   │   │   └── invoice_service.py # 核心处理流程
-│   │   ├── schemas/           # Pydantic 数据验证
-│   │   ├── config.py          # 配置管理
-│   │   └── main.py            # 应用入口
-│   ├── requirements.txt
-│   └── Dockerfile
-│
-├── frontend/                   # React 前端
-│   ├── src/
-│   │   ├── pages/             # 页面组件
-│   │   │   ├── UploadPage.tsx # 上传页面
-│   │   │   ├── InvoiceListPage.tsx # 列表页面
-│   │   │   └── InvoiceDetailPage.tsx # 详情页面
-│   │   ├── components/        # 通用组件
-│   │   │   ├── layout/        # 布局组件
-│   │   │   │   ├── MainLayout.tsx # 主布局 (侧边栏+内容)
-│   │   │   │   └── Sidebar.tsx    # 侧边导航栏
-│   │   │   ├── dashboard/     # 仪表盘组件
-│   │   │   │   ├── MetricCard.tsx # 统计卡片
-│   │   │   │   └── ControlBar.tsx # 控制栏
-│   │   │   └── StatusTag/     # 状态标签组件
-│   │   ├── styles/            # 全局样式
-│   │   │   ├── variables.css  # CSS 变量 (设计规范)
-│   │   │   ├── global.css     # 全局样式
-│   │   │   └── antd-overrides.css # Ant Design 覆盖
-│   │   ├── services/          # API 调用
-│   │   └── types/             # TypeScript 类型
-│   ├── package.json
-│   └── Dockerfile
-│
-├── docs/                       # 文档
-│   ├── images/                # 截图
-│   ├── invoice-manager.pen    # UI 设计稿 (Pencil)
-│   └── UI_REDESIGN.md         # 设计规范文档
-│
-├── docker-compose.yml          # 容器编排
-└── README.md
+backend/app/services/
+├── llm_service.py          视觉理解线路，多模型适配，调用日志落盘
+├── qwen_ocr_service.py     qwen3.5-ocr 结构化抽取（参数的实测依据写在模块注释里）
+├── qr_service.py           二维码解码，zbar 优先、cv2 回退
+├── prompts.py              提示词版本注册表 v1 → v3.2，旧版原样保留以便 A/B
+├── buyer_entities.json     报销主体清单（闭集），带内容指纹
+├── fusion.py               逐字段选源、置信度判定、计算层          ← 纯函数
+├── validation.py           校验规则                                ← 纯函数
+├── review.py               人工核对后的重校验与回写                ← 纯函数
+├── preview_service.py      原件统一渲染为 JPEG，EXIF 转正
+└── invoice_service.py      管线编排：三路并发 → 融合 → 校验 → 入库
+
+backend/eval/
+├── run_v6.sh               端到端跑一轮并出报告
+├── simulate_fusion.py      在历史日志上离线重放融合层
+├── score_logs.py           按版本 / 主数据指纹筛选并打分
+├── ground_truth.json       标注
+└── reports/                逐字段 CSV、逐单据汇总、文字报告
+
+frontend/src/components/
+├── InvoiceReview/          复核工作区
+│   ├── ReviewWorkspace     主布局：字段列表 + 原件查看器
+│   ├── FieldRow            单字段：最终值 + 来源标记 + 置信标签
+│   ├── RecognitionDetails  展开查看三路原始值
+│   ├── DocumentViewer      原件缩放 / 平移 / 旋转
+│   ├── charDiff.ts         字符级差异高亮
+│   ├── useReviewKeyboard   键盘快捷复核
+│   └── reviewModel.test.ts 单元测试
+├── settings/               界面化配置：主体清单、金额规则、模型服务
+├── dashboard/              统计卡片与控制栏
+└── landing/                落地页（含管线示意图）
 ```
 
----
-
-## 🤝 参与贡献 | Contributing
-
-我们欢迎所有形式的贡献！无论是：
-
-- 🐛 **报告 Bug** - 发现问题请提 Issue
-- 💡 **功能建议** - 告诉我们你想要什么功能
-- 📝 **完善文档** - 帮助改进文档
-- 🔧 **提交代码** - Fork & PR
-
-### 本地开发 | Local Development
-
-```bash
-# 后端 | Backend
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-
-# 前端 | Frontend
-cd frontend
-npm install
-npm run dev
-
-# 数据库 | Database (需要先启动 PostgreSQL)
-docker-compose up -d db
-```
-
-### 代码规范 | Code Style
-
-- Python: Black + isort + flake8
-- TypeScript: ESLint + Prettier
-- Commit: [Conventional Commits](https://www.conventionalcommits.org/)
+三个标注为「纯函数」的模块不依赖数据库和网络 —— 这是离线重放能力的前提。
 
 ---
 
 ## 💬 常见问题 | FAQ
 
 <details>
-<summary><b>Q: 不配置LLM可以使用吗？</b></summary>
+<summary><b>Q: 为什么不只用一个模型？</b></summary>
 
-A: 不能自动识别。文字识别（qwen3.5-ocr）同样需要通义千问（DashScope）的 API Key。建议再配置一个视觉模型，两路结果交叉核验，准确率更高。
+因为单模型无法自检。两个独立线路的分歧本身就是最便宜的错误检测信号 ——
+不需要知道谁对，只需要知道他们不一致。实测中销售方字段有 23 张两路不一致，
+全部被正确标记，而最终取值 51/51 正确。
 </details>
 
 <details>
-<summary><b>Q: 支持哪些发票类型？</b></summary>
+<summary><b>Q: 购买方为什么不识别？</b></summary>
 
-A: 主要针对中国增值税发票（普通发票、专用发票）优化。其他格式的发票也可识别，但字段提取可能不完整。
+因为系统本来就知道答案。员工在本企业 OA 内提交报销，购买方必然是本企业主体之一。
+让模型去识别等于凭空制造一个错误来源。改为闭集选择后，购买方识别准确率从 54.9% 提升到 100%。
+
+但不能盲填 —— 模型仍然识别购买方，只是用途从「提取」变成「核验」：
+与系统主体不一致时报警，用于发现传错票、拿他人发票报销等情况。
 </details>
 
 <details>
-<summary><b>Q: OCR 识别不准怎么办？</b></summary>
+<summary><b>Q: 税额为什么是算出来的？</b></summary>
 
-A: 1) 确保上传的图片清晰、方向正确；2) 配置LLM进行双源验证；3) 使用人工复核功能修正。
-</details>
+增值税专票的税额与价税合计可由不含税金额和税率推出。这两个字段原本是识别最脏的
+（OCR 有 49/51 返回大写金额，视觉模型也只有 88–96%），改为计算后直接消除。
 
-<details>
-<summary><b>Q: 如何选择 LLM 提供商？</b></summary>
-
-A:
-- **国内用户**: 推荐通义千问或DeepSeek，速度快、价格低
-- **准确率优先**: 推荐 GPT-4o 或 Claude 3.5 Sonnet
-- **成本优先**: 推荐 GPT-4o-mini 或 Gemini 1.5 Flash
+识别出的值不丢弃，降级为校验值：与计算值不一致即报警。检测能力不但没丢，
+反而更强 —— 第一次有了可信基准去比对。
 </details>
 
 <details>
 <summary><b>Q: 数据安全吗？</b></summary>
 
-A: 系统私有部署，发票记录存储在你自己的数据库里。识别时发票图片会发送给所配置的模型服务（通义千问及其他 LLM 提供商），请根据实际情况选择。
+发票记录存储在你自己的数据库中。识别时发票图片会发送给所配置的模型服务
+（阿里云百炼），二维码解码完全在本地进行。请根据合规要求选择部署方式。
+</details>
+
+<details>
+<summary><b>Q: 识别不准怎么办？</b></summary>
+
+先看详情页的判定条：被规则拦下的错误会给出具体算式（例如「计算值 507.82，
+视觉模型识别为 210.64」），不需要回头翻发票即可判断问题所在。
+展开字段可以看到三路各自的原始值，一键采用其中一路或手动填写。
 </details>
 
 ---
 
 ## 📜 License
 
-[MIT License](LICENSE) - 可自由使用、修改、商用，但请保留版权声明。
+MIT License
 
 ---
 
 ## 🙏 致谢 | Acknowledgments
 
-- 通义千问 qwen3.5-ocr（阿里云百炼）- 发票结构化识别
-- [FastAPI](https://fastapi.tiangolo.com/) - 现代Python Web框架
-- [Ant Design](https://ant.design/) - 企业级UI组件库
+本项目的工程骨架（FastAPI + React + PostgreSQL 的三端结构、Docker 部署方式、
+发票管理的基础 CRUD 与界面）起步于 **[stone16/Invoice-Manager](https://github.com/stone16/Invoice-Manager)**，
+一个基于 PaddleOCR + LLM 双源验证的开源发票管理项目（MIT License）。
+
+在此基础上，本项目重写了识别管线的全部核心逻辑：以三路并行抽取与置信度融合
+替换原有的两路仲裁，移除了本地 PaddleOCR 线路，新增主数据回填、勾稽计算、
+规则校验与离线评测体系。前端的字段对比与复核界面亦重新实现。
+
+感谢原作者提供了一个结构清晰、易于上手的起点。
+
+其余依赖：
+
+- [通义千问 qwen-vl-max / qwen3.5-ocr](https://help.aliyun.com/zh/model-studio/)（阿里云百炼）
+- [FastAPI](https://fastapi.tiangolo.com/) · [React](https://reactjs.org/) · [Ant Design](https://ant.design/)
+- [pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar) · [OpenCV](https://opencv.org/)
 
 ---
 
 <div align="center">
 
-**如果这个项目对你有帮助，请给一个 ⭐ Star！**
-
-**If this project helps you, please give it a ⭐ Star!**
-
-<br/>
-
-Made with ❤️ for the open source community
-
-[Report Bug](../../issues) · [Request Feature](../../issues) · [Discussions](../../discussions)
+**Made by [YukeYao](https://yukeyao.dev)**
 
 </div>
-
----
-
-<!-- SEO Keywords / 搜索关键词 -->
-<!--
-发票识别 发票OCR 中文发票 增值税发票 电子发票 发票管理系统 费用报销 财务自动化 票据识别
-Invoice OCR Chinese Invoice VAT Invoice Invoice Recognition Document AI Receipt OCR
-Expense Management Financial Automation Qwen-OCR GPT-4 Claude LLM Invoice
-开源发票 免费发票识别 Python发票 FastAPI React 发票数据提取 批量发票处理
-Invoice Parser Invoice Scanner Invoice Extractor AI Invoice Processing
--->
